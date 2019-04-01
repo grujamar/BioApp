@@ -1,0 +1,207 @@
+
+html{
+    font-size: 14px;
+}
+
+/*HEADER START*/
+.navbar-container .logo-image {
+    height: 70px;
+    margin-top: 4px;
+}
+
+.navbar-container .scns-name {
+    font-size: 18px;
+    color: darkblue;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+
+.navbar-light .navbar-toggler {
+    border-color: #E84C3D;
+}
+
+.navbar-light .navbar-toggler-icon {
+    background-image: url("data:image/svg+xml;charset=utf8,%3Csvg viewBox='0 0 30 30' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath stroke='rgba(232,76,61, 1)' stroke-width='2' stroke-linecap='round' stroke-miterlimit='10' d='M4 7h22M4 15h22M4 23h22'/%3E%3C/svg%3E");
+}
+
+.navbar-nav li {
+    background: #E84C3D;
+    text-align: center;
+    transition: 0.5s linear;
+}
+
+.navbar-nav li:hover,
+.navbar-nav li.active {
+    background: #e07167;
+}
+
+.navbar-nav li a.nav-link {
+    text-transform: uppercase;
+    color: #fff !important;
+    font-family: 'Montserrat', sans-serif;
+    transition: 0.5s linear;
+}
+
+.navbar-nav li:hover a.nav-link,
+.navbar-nav li.active a {
+    color: #fff !important;
+}
+
+#main-menu {
+    margin: 0 -15px;
+}
+
+
+
+/*MAIN*/
+
+.lead-section .page-name {
+    font-size: 18px;
+    font-weight: bold;
+    color:#6b6b6b;
+}
+
+/*submit section*/
+.submit .submit-span {
+    color: red;
+    font-weight: bold;
+    font-size: 1rem;
+}
+
+.submit .submit-span-none {
+    white-space: normal;
+}
+
+.submit .submit-label {
+    font-weight: bold;
+    font-size: 14px;
+}
+
+.submit .submit-textbox,
+.submit .price-textbox,
+.search-section .submit-textbox{
+    font-size: 14px;
+    border: 1.5px solid #bdbdbd;
+    background: rgba(255,255,255,0);
+    box-shadow: 0 0 1px #bdbdbd inset;
+    padding: 3px 10px;
+    width: 50%;
+}
+
+.submit .submit-dropdownlist,
+.search-section .submit-dropdownlist{
+    font-size: 14px;
+    border: 1.5px solid #bdbdbd;
+    background: rgba(255,255,255,0);
+    box-shadow: 0 0 1px #bdbdbd inset;
+    padding: 3px 10px;
+    width: 80%;
+}
+
+.submit .submit-textbox:focus,
+.submit .price-textbox:focus,
+.submit .submit-dropdownlist:focus,
+.search-section .submit-textbox:focus,
+.search-section .submit-dropdownlist:focus {
+    background: rgba(220,220,220,0.3);
+    color: #000;
+    border: 1.5px solid darkgray;
+    box-shadow: none;
+}
+
+.submit .submit-example {
+    font-weight: bold;
+    font-size: 14px;
+    margin-right: 10px;
+}
+
+.submit .submit-customValidator {
+    font-size: 14px;
+    font-weight: bold;
+    color:red;
+}
+
+/*Button*/
+.btn-danger {
+    background-color: #E84C3D !important;
+    font-size: 16px !important;
+    
+}
+
+.btn-danger:hover {
+    background-color: #c22617 !important;
+}
+
+.save {
+    padding: 10px 30px 10px 43px;
+    background: url(../img/save.png) left 12px top 10px no-repeat #E84C3D;
+}
+
+.btn-success {
+    font-size: 14px !important;
+}
+
+.btn-secondary {
+    font-size: 13px !important;
+}
+
+/*GridView*/
+.section-gridview {
+    height: 750px;
+}
+
+.container-grid {
+    max-width: 1140px;
+}
+
+.section-gridview .icons{
+    font-size: 25px;
+    color: #c22617;
+    text-decoration: none;
+    text-align: center;
+}
+
+.link-style-gridview {
+    color: #c22617 !important;
+    text-decoration: none;
+    font-weight:bold;
+}
+
+#GridView1 tr:hover {
+    background: #E84C3D; /*svaki red u body-u, hover sa nekom bojom, kada se prelazi*/
+    color: #fff;
+}
+
+
+/*Footer*/
+footer-positioning {
+    position: fixed;
+    bottom: 0px;
+    left: 0px;
+    right: 0px;
+}
+
+
+footer .social .fa {
+    width: 48px;
+    height: 48px;
+    line-height: 48px;
+    color: #fff;
+    border: 2px solid #fff;
+    border-radius: 50%;
+    font-size: 28px;
+    transition: 0.5s linear;
+    text-decoration:none;
+}
+
+footer .social .fa:hover {
+    background: #E84C3D;
+    border: 2px solid #E84C3D;
+}
+
+footer a {
+    color: #a53429;
+    text-decoration: none;
+    font-weight:bold;
+}

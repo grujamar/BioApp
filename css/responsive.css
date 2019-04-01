@@ -1,0 +1,93 @@
+
+
+
+@media(min-width:576px){
+        
+    
+    
+}
+
+
+@media(min-width:768px){
+
+    /*HEADER*/
+    .navbar-nav li {
+        background: transparent;
+        border-bottom: 2px solid transparent;
+        transition: 0.5s linear;
+        padding: 0 10px;
+        font-size: 14px;
+    }
+
+    .navbar-nav li:hover,
+    .navbar-nav li.active {
+        background: transparent;
+        border-bottom: 2px solid #E84C3D;
+    }
+
+    .navbar-nav li a.nav-link {
+        text-transform: uppercase;
+        color: #ef8a81 !important;
+        transition: 0.5s linear;
+    }
+
+    .navbar-nav li:hover a.nav-link,
+    .navbar-nav li.active a {
+        color: #E84C3D !important;
+    }
+
+    #main-menu {
+        margin: 0px;
+    }
+
+    .navbar-brand {
+        max-width: 170px;
+    }
+
+    .submit .submit-textbox {
+        width: 50%;
+    }
+
+    .submit .price-textbox {
+        width: 40%;
+    }
+
+    .submit .submit-dropdownlist {
+        width: 60%;
+    }
+}
+
+
+@media(min-width:992px){
+    
+    html{
+        font-size: 16px;
+    }
+
+    .submit .submit-dropdownlist {
+        width: 80%;
+    }
+
+    .container-grid {
+        max-width:1640px;
+    }
+
+    .section-gridview {
+        height: 600px;
+    }
+}
+
+@media(min-width:1130px) {
+
+    .section-gridview {
+        height: 500px;
+    }
+}
+
+
+@media(min-width:1200px) {
+
+    .section-gridview {
+        height: 400px;
+    }
+}
