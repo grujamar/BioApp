@@ -57,30 +57,38 @@ html{
 /*MAIN*/
 
 .lead-section .page-name {
-    font-size: 18px;
+    font-size: 20px;
     font-weight: bold;
     color:#6b6b6b;
 }
 
-/*submit section*/
-.submit .submit-span {
+.checkbox-section {
+    padding: 20px;
+}
+
+/*izbor-section*/
+.izbor-section {
+    padding: 20px;
+}
+
+.izbor-section .submit-span {
     color: red;
     font-weight: bold;
     font-size: 1rem;
 }
 
-.submit .submit-span-none {
+.izbor-section .submit-span-none {
     white-space: normal;
 }
 
-.submit .submit-label {
+.izbor-section .submit-label {
     font-weight: bold;
     font-size: 14px;
 }
 
-.submit .submit-textbox,
-.submit .price-textbox,
-.search-section .submit-textbox{
+.izbor-section .submit-textbox,
+.izbor-section .price-textbox,
+.izbor-section .submit-textbox {
     font-size: 14px;
     border: 1.5px solid #bdbdbd;
     background: rgba(255,255,255,0);
@@ -89,8 +97,8 @@ html{
     width: 50%;
 }
 
-.submit .submit-dropdownlist,
-.search-section .submit-dropdownlist{
+.izbor-section .submit-dropdownlist,
+.search-section .submit-dropdownlist {
     font-size: 14px;
     border: 1.5px solid #bdbdbd;
     background: rgba(255,255,255,0);
@@ -99,9 +107,9 @@ html{
     width: 80%;
 }
 
-.submit .submit-textbox:focus,
-.submit .price-textbox:focus,
-.submit .submit-dropdownlist:focus,
+.izbor-section .submit-textbox:focus,
+.izbor-section .price-textbox:focus,
+.izbor-section .submit-dropdownlist:focus,
 .search-section .submit-textbox:focus,
 .search-section .submit-dropdownlist:focus {
     background: rgba(220,220,220,0.3);
@@ -110,23 +118,42 @@ html{
     box-shadow: none;
 }
 
-.submit .submit-example {
+.izbor-section .submit-example {
     font-weight: bold;
     font-size: 14px;
     margin-right: 10px;
 }
 
-.submit .submit-customValidator {
+.submit-customValidator {
     font-size: 14px;
     font-weight: bold;
-    color:red;
+    color: red;
 }
 
+.after-starting .submit-label,
+.after-starting .submit-label-db {
+    font-weight: bold !important;
+    font-size: 20px !important;
+}
+
+.Submit-btnClear {
+    padding: 5px;
+    border: 1px solid #000;
+    border-radius: 8px;
+}
+
+.Submit-btnClear:hover {
+    background: #E84C3D;
+    color: azure;
+}
+
+.submit-Timer {
+    font-size: 25px;
+}
 /*Button*/
 .btn-danger {
     background-color: #E84C3D !important;
     font-size: 16px !important;
-    
 }
 
 .btn-danger:hover {
@@ -147,15 +174,20 @@ html{
 }
 
 /*GridView*/
-.section-gridview {
-    height: 750px;
+
+.section-gridview .container-grid {
+    max-width: 1140px !important;
 }
 
-.container-grid {
-    max-width: 1140px;
+.section-gridview .gridview-left-side {
+    margin-left: 0px;
 }
 
-.section-gridview .icons{
+.section-gridview .gridview-right-side {
+    margin-right: 0px;
+}
+
+.section-gridview .icons {
     font-size: 25px;
     color: #c22617;
     text-decoration: none;
@@ -165,43 +197,21 @@ html{
 .link-style-gridview {
     color: #c22617 !important;
     text-decoration: none;
-    font-weight:bold;
-}
-
-#GridView1 tr:hover {
-    background: #E84C3D; /*svaki red u body-u, hover sa nekom bojom, kada se prelazi*/
-    color: #fff;
+    font-weight: bold;
 }
 
 
-/*Footer*/
-footer-positioning {
-    position: fixed;
-    bottom: 0px;
-    left: 0px;
-    right: 0px;
+/*TOOLTIP*/
+#tooltip {
+    position: absolute;
+    z-index: 3000;
+    border: 1px solid #111;
+    background-color: #FEFFFF;
+    padding: 5px;
+    opacity: 1.55;
 }
 
+    #tooltip h3, #tooltip div {
+        margin: 0;
+    }
 
-footer .social .fa {
-    width: 48px;
-    height: 48px;
-    line-height: 48px;
-    color: #fff;
-    border: 2px solid #fff;
-    border-radius: 50%;
-    font-size: 28px;
-    transition: 0.5s linear;
-    text-decoration:none;
-}
-
-footer .social .fa:hover {
-    background: #E84C3D;
-    border: 2px solid #E84C3D;
-}
-
-footer a {
-    color: #a53429;
-    text-decoration: none;
-    font-weight:bold;
-}

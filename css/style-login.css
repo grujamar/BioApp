@@ -120,7 +120,7 @@
     -webkit-border-bottom-left-radius: 5px;
 }
 .user-icon {
-    top: 177px;
+    top: 150px;
     background: rgba(65,72,72,0.75) url(../images/user.png) no-repeat center;
 }
 .pass-icon {

@@ -10,9 +10,9 @@
 <!-- Font Awesome-->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"/>
 <!--theme css-->
+<link href="css/style-login.css" rel="stylesheet" type="text/css"/>
 <link href="css/style.css" rel="stylesheet" type="text/css"/>
 <link href="css/responsive.css" rel="stylesheet" type="text/css"/>
-<link href="css/style-login.css" rel="stylesheet" type="text/css"/>
 <!-- Optional JavaScript -->
 <!-- jQuery first, then Popper.js, then Bootstrap JS -->
 <script src="js/jquery.js" type="text/javascript"></script>
@@ -22,7 +22,10 @@
 <link href="css/jquery-ui.css" rel="stylesheet" type="text/css"/>
 <script src="js/jquery-1.12.4.js" type="text/javascript"></script>
 <script src="js/jquery-ui.js" type="text/javascript"></script>
+<!--disabledRightClickAndCtrl-->
+<script src="js/disabledRightClickAndCtrl.js" type="text/javascript"></script>
 <!--SWEAT ALERT-->
 <script src="js/sweetalert.js" type="text/javascript"></script>
 <script src="js/bio.js" type="text/javascript"></script>
-<script src="js/main.js" type="text/javascript"></script>
+<script src="js/Main.js" type="text/javascript"></script>
+

@@ -126,13 +126,47 @@ public static class Utils
         return returnValue;
     }
 
-    public static bool ValidateOrganisation(string SelectedValue, string IDItem, out string ErrorMessage)
+
+
+    public static bool ValidateListSize(int SelectedValue, out string ErrorMessage)
+    {
+        bool returnValue = true;
+        ErrorMessage = string.Empty;
+
+        if (SelectedValue == 0)
+        {
+            ErrorMessage = "Morate izabrati makar jedan predmet.";
+            returnValue = false;
+        }
+        else if (SelectedValue == 1)
+        {
+            ErrorMessage = "";
+            returnValue = true;
+        }
+        else if (SelectedValue > 2)
+        {
+            ErrorMessage = "Ne možete izabrati više od dva predmeta.";
+            returnValue = false;
+        }
+        else
+        {
+            ErrorMessage = string.Empty;
+            returnValue = true;
+        }
+
+        return returnValue;
+    }
+
+
+
+
+    public static bool ValidateIzbor(string SelectedValue, string IDItem, out string ErrorMessage)
     {
         bool returnValue = true;
         ErrorMessage = string.Empty;
 
         if (SelectedValue == IDItem){
-            ErrorMessage = "Organizacija je obavezno polje. ";
+            ErrorMessage = "Izbor je obavezno polje. ";
             returnValue = false;
         }else{
             returnValue = true;
@@ -140,6 +174,13 @@ public static class Utils
 
         return returnValue;
     }
+
+
+
+
+
+
+
 
     public static bool ValidateTypeOdPayment(string SelectedValue, string IDItem, out string ErrorMessage)
     {

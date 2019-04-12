@@ -38,34 +38,36 @@ public partial class login : System.Web.UI.Page
 
     protected void LoginButton_Click(object sender, EventArgs e)
     {
+        int IDLokacija = 1;
+        
+
         try
         {
             if (Page.IsValid)
             {
-                SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["BioConnectionString"].ToString());
-                con.Open();
+                int IDLogPredavanja = 0;
+                int IDOsoba = 0;
+                string Ime = string.Empty;
+                string Prezime = string.Empty;
+                int Result = 0;
 
-                string tableName = "vNastavnoOsoblje";
-                SqlCommand cmd = new SqlCommand("select * from " + tableName + " WHERE Username=@Username", con);
-                cmd.Parameters.AddWithValue("@Username", txtUsername.Text);
-                SqlDataAdapter sda = new SqlDataAdapter(cmd);
-                DataTable dt = new DataTable();
-                sda.Fill(dt);
-                foreach (DataRow row in dt.Rows)
+                Utility utility = new Utility();
+
+                utility.loginPredavanja(txtUsername.Text, IDLokacija, out IDLogPredavanja, out IDOsoba, out Ime, out Prezime, out Result);
+                log.Debug("Login Predavanja: " + " Sifra lokacije - " + IDLokacija + " " + ". Username - " + txtUsername.Text + " " + ". IDLogPredavanja - " + IDLogPredavanja + " " + ". idOsoba - " + IDOsoba + " " + ". Ime - " + Ime + " " + ". Prezime - " + Prezime + " " + ". Rezultat - " + Result);
+
+                if (Result != 0)
                 {
-                    string Ime = row[1].ToString();
-                    string Prezime = row[2].ToString();
-                    log.Info("successfully LOGIN with username: " + txtUsername.Text + ", name: " + Ime + " and password: " + Prezime);
-                    Session["login_Ime"] = Ime;
-                    Session["login_Prezime"] = Prezime;
-                }
-                if (dt.Rows.Count > 0)
-                {
-                    Response.Redirect("index.aspx", false); // this will tell .NET framework not to stop the execution of the current thread and hence the error will be resolved.
+                    throw new Exception("Result from database is diferent from 0. Result is: " + Result);
                 }
                 else
                 {
-                    ClientScript.RegisterStartupScript(Page.GetType(), "validation", "<script language='javascript'>alert('Pogrešno Korisničko Ime! Pokušajte ponovo!')</script>");
+                    Session["login_Ime"] = Ime;
+                    Session["login_Prezime"] = Prezime;
+                    Session["lbl_loginID"] = IDOsoba;
+                    Session["login_IDLogPredavanja"] = IDLogPredavanja;
+
+                    Response.Redirect("index.aspx", false); // this will tell .NET framework not to stop the execution of the current thread and hence the error will be resolved.
                 }
             }
             else if (!Page.IsValid)
@@ -76,7 +78,7 @@ public partial class login : System.Web.UI.Page
         catch (Exception ex)
         {
             log.Error("Error while trying to LOGIN. " + ex.Message);
-            throw new Exception("Error while trying to LOGIN. " + ex.Message);
+            ScriptManager.RegisterStartupScript(this, GetType(), "erroralert", "erroralert();", true);
         }
     }
 

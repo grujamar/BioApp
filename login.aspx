@@ -30,11 +30,11 @@
                 <span>Popunite vaše korisničke informacije kako bi se ulogovali u sistem.</span>
             </div>
             <div class="content">
-                <asp:TextBox ID="txtUsername" runat="server" CssClass="input username" maxlength="20" TabIndex="1" placeholder="Korisničko ime"></asp:TextBox>
+                <asp:TextBox ID="txtUsername" runat="server" CssClass="input username" maxlength="25" TabIndex="1" placeholder="Korisničko ime"></asp:TextBox>
                 <asp:Label ID="errUsername" runat="server" style="font-size:13px;" ForeColor="Red"></asp:Label>
                 <asp:CustomValidator runat="server" id="cvUsername" controltovalidate="txtUsername" errormessage="" OnServerValidate="cvUsername_ServerValidate" Display="Dynamic" ForeColor="Red" style="font-size:13px;" ValidateEmptyText="true"/>
             </div>
-            <div class="footer mt-4">
+            <div class="footer">
                 <asp:Button ID="btnSubmit" runat="server" Text="Prijava" CssClass="button" OnClick="LoginButton_Click" TabIndex="2"/>
             </div>
         </form>

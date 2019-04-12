@@ -14,22 +14,18 @@ $(document).ready(function () {
         $(".pass-icon").css("left", "0px");
     });
 
+    TooltipImages();
+
+    function TooltipImages() {
+        $(".gridImages").tooltip({
+            track: true,
+            delay: 0,
+            showURL: false,
+            fade: 100,
+            bodyHandler: function () {
+                return $($(this).next().html());
+            },
+            showURL: false
+        });
+    }
 });
-
-function successalert() {
-    swal({
-        title: 'Uspešno uneta faktura.',
-        text: '',
-        type: 'OK'
-    });
-};
-
-
-
-function erroralertSearch() {
-    swal({
-        title: 'Greška prilikom pretraživanja fakture.',
-        text: 'Kontaktirajte administratora.',
-        type: 'OK'
-    });
-};
