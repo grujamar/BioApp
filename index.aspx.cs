@@ -74,13 +74,12 @@ public partial class index : System.Web.UI.Page
     {
         try
         {
-            int IDLogPredavanja = 0;
             int Result = 0;
 
             Utility utility = new Utility();
 
             utility.logoutPredavanja(Convert.ToInt32(Session["login_IDLogPredavanja"]), out Result);
-            log.Debug("Logout Predavanja: " + ". IDLogPredavanja - " + IDLogPredavanja + " " + ". Rezultat - " + Result);
+            log.Debug("Logout Predavanja: " + ". IDLogPredavanja - " + Convert.ToInt32(Session["login_IDLogPredavanja"]) + " " + ". Rezultat - " + Result);
 
             if (Result != 0)
             {
