@@ -11,6 +11,7 @@ using System.Web;
 using System.Web.UI;
 using System.Web.UI.HtmlControls;
 using System.Web.UI.WebControls;
+using System.Security.Cryptography;
 
 public partial class index : System.Web.UI.Page
 {
@@ -32,19 +33,20 @@ public partial class index : System.Web.UI.Page
         ShowDatepicker();
 
         if (!Page.IsPostBack)
-        {
+        {      
             if (Session["login_Ime"] != null && Session["login_Prezime"] != null && Session["lbl_loginID"] != null)
             {
                 lbl_Ime.Text = Session["login_Ime"].ToString();
                 lbl_Prezime.Text = Session["login_Prezime"].ToString();
+
                 //ShowHideDiv(false);
                 HideDatepicker();
             }
             else
             {
                 Response.Redirect("login.aspx", false);
-            }
-        }
+            } 
+        }      
     }
 
     private void AvoidCashing()
@@ -92,7 +94,7 @@ public partial class index : System.Web.UI.Page
                 Session["lbl_loginID"] = null;
                 Session["login_IDLogPredavanja"] = null;
 
-                Response.Redirect("Login.aspx", false);
+                Response.Redirect("Login.aspx?d=" + Session["login-encryptedParameters"].ToString(), false);
             }
         }
         catch (Exception ex)

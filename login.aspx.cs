@@ -24,9 +24,49 @@ public partial class login : System.Web.UI.Page
         }
         AvoidCashing();
 
-        if (!Page.IsPostBack)
+        string encryptedParameters = Request.QueryString["d"];
+        Session["login-encryptedParameters"] = encryptedParameters; 
+
+        if ((encryptedParameters != string.Empty) && (encryptedParameters != null))
         {
-            log.Info("Aplication successfully start. ");
+            // replace encoded plus sign "%2b" with real plus sign +
+            encryptedParameters = encryptedParameters.Replace("%2b", "+");
+            string decryptedParameters = AuthenticatedEncryption.AuthenticatedEncryption.Decrypt(encryptedParameters, Constants.CryptKey, Constants.AuthKey);
+
+            HttpRequest req = new HttpRequest("", "http://www.pis.rs", decryptedParameters);
+
+            string data = req.QueryString["IDLokacija"];
+
+            if ((data != string.Empty) && (data != null))
+            {
+                Session["login-IDLokacija"] = data;
+            }
+            else
+            {
+                Session["login-IDLokacija"] = "0";
+            }
+
+            if (!Page.IsPostBack)
+            {
+                if (Session["login-IDLokacija"] != null)
+                {
+                    int idLokacija = Convert.ToInt32(Session["login-IDLokacija"]);
+                    if (idLokacija != 0)
+                    {
+                        log.Info("Aplication successfully start. IDLokacija is: " + idLokacija);
+                    }
+                    else
+                    {
+                        Response.Redirect("GreskaLokacija.aspx", false); 
+                        log.Error("Error. IDLokacija is: " + encryptedParameters);
+                    }
+                }
+            }
+        }
+        else
+        {
+            Response.Redirect("GreskaLokacija.aspx", false);
+            log.Error("Error. IDLokacija is: " + encryptedParameters);
         }
     }
 
@@ -38,13 +78,11 @@ public partial class login : System.Web.UI.Page
 
     protected void LoginButton_Click(object sender, EventArgs e)
     {
-        int IDLokacija = 1;
-        
-
         try
         {
             if (Page.IsValid)
             {
+                int IDLokacija = Convert.ToInt32(Session["login-IDLokacija"]);
                 int IDLogPredavanja = 0;
                 int IDOsoba = 0;
                 string Ime = string.Empty;
