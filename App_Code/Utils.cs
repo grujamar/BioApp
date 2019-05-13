@@ -166,7 +166,7 @@ public static class Utils
         ErrorMessage = string.Empty;
 
         if (SelectedValue == IDItem){
-            ErrorMessage = "Izbor je obavezno polje. ";
+            ErrorMessage = "Tip predavanja je obavezno polje. ";
             returnValue = false;
         }else{
             returnValue = true;
@@ -174,12 +174,6 @@ public static class Utils
 
         return returnValue;
     }
-
-
-
-
-
-
 
 
     public static bool ValidateTypeOdPayment(string SelectedValue, string IDItem, out string ErrorMessage)

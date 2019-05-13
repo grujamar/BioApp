@@ -28,16 +28,23 @@ public partial class predavanje : System.Web.UI.Page
 
         if (!Page.IsPostBack)
         {
-            if (Session["login_Ime"] != null && Session["login_Prezime"] != null && Session["lbl_loginID"] != null)
+            if (Session["login_Ime"] != null && Session["lbl_loginID"] != null)
             {
+                if (Session["Predavanja_predmetiNazivi"] != null)
+                {
+                    spanIzborKonacno.Text = Session["Predavanje_tipPredavanja"].ToString();
+                    increasePredmetiNazivi();
+                }
+                else
+                {
+                    spanIzborKonacno.Text = Session["Predavanje_spanIzborKonacno.Text"].ToString();
+                    increasePredmetiList();
+                }
                 lbl_Ime.Text = Session["login_Ime"].ToString();
-                lbl_Prezime.Text = Session["login_Prezime"].ToString();
-                spanIzborKonacno.Text = Session["Predavanje_spanIzborKonacno.Text"].ToString();
                 GridView1.DataBind();
                 btnLogout.Enabled = false;
                 TimeSpan trimmedSpan1;
                 TimeSpanNow(out trimmedSpan1);
-                increasePredmetiList();
             }
         }
     }
@@ -64,7 +71,29 @@ public partial class predavanje : System.Web.UI.Page
             throw new Exception();
         }
     }
-    
+
+    protected void increasePredmetiNazivi()
+    {
+        try
+        {
+            HtmlGenericControl li;
+            List<string> PredmetiList;
+            PredmetiList = (List<string>)Session["Predavanja_predmetiNazivi"];
+            for (int i = 0; i < PredmetiList.Count; i++)
+            {
+                li = new HtmlGenericControl("li");
+                li.Attributes.Add("class", "submit-label ml-2");
+                li.InnerText = PredmetiList[i];
+                predmetiList.Controls.Add(li);
+            }
+        }
+        catch (Exception ex)
+        {
+            log.Error("Error in function increasePredmetiNazivi. " + ex.Message);
+            throw new Exception();
+        }
+    }
+
     private void AvoidCashing()
     {
         Response.Cache.SetNoStore();
@@ -106,11 +135,11 @@ public partial class predavanje : System.Web.UI.Page
 
     protected void btnEnd_Click(object sender, EventArgs e)
     {
+        List<int> idTerminiPredavanja;
+        List<Predavanje> IDPredavanjeList;
+
         try
         {
-            List<Predavanje> IDPredavanjeList = new List<Predavanje>();
-            IDPredavanjeList = (List<Predavanje>)Session["Predavanja-IDPredavanjeList"];
-
             TimeSpan d1TimeSpan = DateTime.Now.TimeOfDay;
             TimeSpan d1TimeSpanTrimmed = new TimeSpan(d1TimeSpan.Hours, d1TimeSpan.Minutes, d1TimeSpan.Seconds);
 
@@ -122,34 +151,74 @@ public partial class predavanje : System.Web.UI.Page
 
             Utility utility = new Utility();
 
-            foreach (var item in IDPredavanjeList)
+            if (Session["Predavanja-idTerminPonovnogPredavanja"] != null)
             {
-                utility.zavrsavanjePredavanja(item.Predavanje1, d1TimeSpanTrimmed, procenatZaPriznavanje, out Result);
-                log.Debug("Zavrsavanje predavanja : " + " IdPredavanje - " + item.Predavanje1 + " " + ". Kraj - " + d1TimeSpanTrimmed + " " + ". ProcenatZaPriznavanje - " + procenatZaPriznavanje + " " + ". Rezultat - " + Result);
+                idTerminiPredavanja = new List<int>();
+                idTerminiPredavanja = (List<int>)Session["Predavanja-idPonovnogPredavanja"];
+
+                foreach (var item in idTerminiPredavanja)
+                {
+                    utility.zavrsavanjePredavanja(item, d1TimeSpanTrimmed, procenatZaPriznavanje, out Result);
+                    log.Debug("Zavrsavanje predavanja : " + " IdPredavanje - " + item + " " + ". Kraj - " + d1TimeSpanTrimmed + " " + ". ProcenatZaPriznavanje - " + procenatZaPriznavanje + " " + ". Rezultat - " + Result);
+                    if (Result != 0)
+                    {
+                        throw new Exception("Result from database is diferent from 0. Result is: " + Result);
+                    }
+                }
+
+                utility.zavrsavanjeTermina(Convert.ToInt32(Session["Predavanja-idTerminPonovnogPredavanja"]), d1TimeSpanTrimmed, out Result);
+                log.Debug("Zavrsavanje termina : " + " IdTerminPredavanja - " + Convert.ToInt32(Session["Predavanja-idTerminPonovnogPredavanja"]) + " " + ". Kraj - " + d1TimeSpanTrimmed + " " + ". Rezultat - " + Result);
                 if (Result != 0)
                 {
                     throw new Exception("Result from database is diferent from 0. Result is: " + Result);
                 }
-            }
-
-            utility.zavrsavanjeTermina(Convert.ToInt32(Session["Predavanje_idTerminPredavanja"]), d1TimeSpanTrimmed, out Result);
-            log.Debug("Zavrsavanje termina : " + " IdTerminPredavanja - " + Convert.ToInt32(Session["Predavanje_idTerminPredavanja"]) + " " + ". Kraj - " + d1TimeSpanTrimmed + " " + ". Rezultat - " + Result);
-            if (Result != 0)
-            {
-                throw new Exception("Result from database is diferent from 0. Result is: " + Result);
+                else
+                {
+                    btnLogout.Enabled = true;
+                    Response.Redirect("index.aspx", false); // this will tell .NET framework not to stop the execution of the current thread and hence the error will be resolved.
+                                                            //ShowHideDiv(false);
+                                                            //HideDatepicker();
+                }
             }
             else
             {
-                btnLogout.Enabled = true;
-                Response.Redirect("index.aspx", false); // this will tell .NET framework not to stop the execution of the current thread and hence the error will be resolved.
-                //ShowHideDiv(false);
-                //HideDatepicker();
-            }
+                IDPredavanjeList = new List<Predavanje>();
+                IDPredavanjeList = (List<Predavanje>)Session["Predavanja-IDPredavanjeList"];
 
+                foreach (var item in IDPredavanjeList)
+                {
+                    utility.zavrsavanjePredavanja(item.Predavanje1, d1TimeSpanTrimmed, procenatZaPriznavanje, out Result);
+                    log.Debug("Zavrsavanje predavanja : " + " IdPredavanje - " + item.Predavanje1 + " " + ". Kraj - " + d1TimeSpanTrimmed + " " + ". ProcenatZaPriznavanje - " + procenatZaPriznavanje + " " + ". Rezultat - " + Result);
+                    if (Result != 0)
+                    {
+                        throw new Exception("Result from database is diferent from 0. Result is: " + Result);
+                    }
+                }
+
+                utility.zavrsavanjeTermina(Convert.ToInt32(Session["Predavanje_idTerminPredavanja"]), d1TimeSpanTrimmed, out Result);
+                log.Debug("Zavrsavanje termina : " + " IdTerminPredavanja - " + Convert.ToInt32(Session["Predavanje_idTerminPredavanja"]) + " " + ". Kraj - " + d1TimeSpanTrimmed + " " + ". Rezultat - " + Result);
+                if (Result != 0)
+                {
+                    throw new Exception("Result from database is diferent from 0. Result is: " + Result);
+                }
+                else
+                {
+                    btnLogout.Enabled = true;
+                    Response.Redirect("index.aspx", false); // this will tell .NET framework not to stop the execution of the current thread and hence the error will be resolved.
+                                                            //ShowHideDiv(false);
+                                                            //HideDatepicker();
+                }
+            }
         }
         catch (Exception ex)
         {
-            increasePredmetiList();
+            if (Session["Predavanja-idTerminPonovnogPredavanja"] != null)
+            {
+                increasePredmetiNazivi();
+            }
+            else {
+                increasePredmetiList();
+            }
             log.Error("End button submit error. " + ex.Message);
             ScriptManager.RegisterStartupScript(this, GetType(), "erroralert", "erroralert();", true);
         }

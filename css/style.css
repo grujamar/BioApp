@@ -3,6 +3,10 @@ html{
     font-size: 14px;
 }
 
+.mycheckbox input[type="checkbox"] {
+    margin-right: 5px;
+}
+
 /*HEADER START*/
 .navbar-container .logo-image {
     height: 70px;
@@ -130,9 +134,13 @@ html{
     color: red;
 }
 
-.after-starting .submit-label,
-.after-starting .submit-label-db {
+.after-starting .submit-label {
     font-weight: bold !important;
+    font-size: 16px !important;
+}
+
+.after-starting .submit-label-db {
+    color: #E84C3D !important;
     font-size: 20px !important;
 }
 

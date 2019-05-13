@@ -33,20 +33,70 @@ public partial class index : System.Web.UI.Page
         ShowDatepicker();
 
         if (!Page.IsPostBack)
-        {      
-            if (Session["login_Ime"] != null && Session["login_Prezime"] != null && Session["lbl_loginID"] != null)
-            {
-                lbl_Ime.Text = Session["login_Ime"].ToString();
-                lbl_Prezime.Text = Session["login_Prezime"].ToString();
+        {
+            int idOsoba = Convert.ToInt32(Session["lbl_loginID"]);
+            int IDTerminPredavanja = 0;
+            int IDLokacija = 0;
+            int IDLogPredavanja = 0;
+            List<int> predmetiList = new List<int>();
+            utility.getTerminPredavanjaKraj(idOsoba, out IDTerminPredavanja, out IDLokacija, out IDLogPredavanja, out predmetiList);
+            log.Debug("Check in table TerminPredavanja if Kraj is null. IDTerminPredavanja - " + IDTerminPredavanja + " IDLokacija - " + IDLokacija + " IDLogPredavanja - " + IDLogPredavanja + " predmetiList.Count - " + predmetiList.Count);
 
-                //ShowHideDiv(false);
-                HideDatepicker();
-            }
-            else
+            lblstranicanaziv.Text = utility.getImeLokacije(Convert.ToInt32(Session["login-IDLokacija"]));
+            log.Debug("Location name - " + lblstranicanaziv.Text);
+
+            if (IDTerminPredavanja != 0)
             {
-                Response.Redirect("login.aspx", false);
-            } 
+                List<int> idTerminiPredavanja = new List<int>();
+                utility.getIDTerminePredavanja(IDTerminPredavanja, out idTerminiPredavanja);
+                log.Debug("IDTerminiPredavanja.Count - " + idTerminiPredavanja.Count);
+                Session["Predavanja-idPonovnogPredavanja"] = idTerminiPredavanja;
+                Session["Predavanja-idTerminPonovnogPredavanja"] = IDTerminPredavanja;
+
+                List<string> predmetiNaziv = new List<string>();
+                predmetiNaziv = getPredmetiNaziv(utility, predmetiList, idOsoba);
+                Session["Predavanja_predmetiNazivi"] = predmetiNaziv;
+
+                string tipPredavanja = utility.getTipPredavanja(idOsoba, IDTerminPredavanja, IDLokacija, IDLogPredavanja);
+                Session["Predavanje_tipPredavanja"] = tipPredavanja;
+
+                Response.Redirect("predavanje.aspx", false);
+            }
+            else {
+                
+                if (Session["login_Ime"] != null && Session["lbl_loginID"] != null)
+                {
+                    lbl_Ime.Text = Session["login_Ime"].ToString();
+
+                    //ShowHideDiv(false);
+                    HideDatepicker();
+                }
+                else
+                {
+                    Response.Redirect("login.aspx", false);
+                }
+            }
         }      
+    }
+
+    public List<string> getPredmetiNaziv(Utility utility, List<int> predmetiList, int idOsoba)
+    {
+        List<string> predmeti = new List<string>();
+
+        try
+        {
+            foreach (var idpredmet in predmetiList)
+            {
+                string predmet = utility.getPredmetNaziv(idOsoba, idpredmet);
+                log.Debug("Predmeti: " + predmet);
+                predmeti.Add(predmet);
+            }
+        }
+        catch (Exception ex)
+        {
+            log.Error("Error in function getPredmetiNaziv. " + ex.Message);
+        }
+        return predmeti;
     }
 
     private void AvoidCashing()
@@ -90,7 +140,6 @@ public partial class index : System.Web.UI.Page
             else
             {
                 Session["login_Ime"] = null;
-                Session["login_Prezime"] = null;
                 Session["lbl_loginID"] = null;
                 Session["login_IDLogPredavanja"] = null;
 
@@ -182,7 +231,7 @@ public partial class index : System.Web.UI.Page
 
             if (Page.IsValid)
             {
-                int IDLokacija = 1;
+                int IDLokacija = Convert.ToInt32(Session["login-IDLokacija"]);
 
                 DateTime d1 = DateTime.Now;
                 Session["Predavanja_VremeZapocinjanja"] = d1;
@@ -200,7 +249,6 @@ public partial class index : System.Web.UI.Page
                 int IDPredavanje = 0;
                 int IDTerminPredavanja = 0;
                 
-
                 string FinalDate = string.Empty;
                 string FormatDateTime = "dd.mm.yyyy";
                 string FormatToString = "yyyy-mm-dd";
@@ -256,7 +304,7 @@ public partial class index : System.Web.UI.Page
                         Session["Predavanja-IDPredavanjeList"] = IDPredavanjeList;
                         //ShowHideDiv(true);
                         //GridView1.DataBind();
-                        Response.Redirect("predavanje.aspx", false); // this will tell .NET framework not to stop the execution of the current thread and hence the error will be resolved.
+                        Response.Redirect("predavanje.aspx", false);
                     }
                 }
             }

@@ -38,7 +38,7 @@ public class Utility
         return true;
     }
 
-    public void loginPredavanja(string Username, int IDLokacija, out int idLogPredavanja, out int idOsoba, out string Ime, out string Prezime, out int result)
+    public void loginPredavanja(string Username, int IDLokacija, out int idLogPredavanja, out int idOsoba, out string Ime, out int result)
     {
         try
         {
@@ -56,11 +56,8 @@ public class Utility
             objCmd.Parameters.Add("@IDOsoba", System.Data.SqlDbType.Int);
             objCmd.Parameters["@IDOsoba"].Direction = System.Data.ParameterDirection.Output;
 
-            objCmd.Parameters.Add("@Ime", System.Data.SqlDbType.NVarChar, 50);
-            objCmd.Parameters["@Ime"].Direction = System.Data.ParameterDirection.Output;
-
-            objCmd.Parameters.Add("@Prezime", System.Data.SqlDbType.NVarChar, 50);
-            objCmd.Parameters["@Prezime"].Direction = System.Data.ParameterDirection.Output;
+            objCmd.Parameters.Add("@PunoIme", System.Data.SqlDbType.NVarChar, -1);
+            objCmd.Parameters["@PunoIme"].Direction = System.Data.ParameterDirection.Output;
 
             objCmd.Parameters.Add("@err", System.Data.SqlDbType.Int);
             objCmd.Parameters["@err"].Direction = ParameterDirection.ReturnValue;
@@ -71,8 +68,7 @@ public class Utility
             //Retrieve the values of the output parameters
             idLogPredavanja = Convert.ToInt32(objCmd.Parameters["@IDLogPredavanja"].Value);
             idOsoba = Convert.ToInt32(objCmd.Parameters["@IDOsoba"].Value);
-            Ime = objCmd.Parameters["@Ime"].Value.ToString();
-            Prezime = objCmd.Parameters["@Prezime"].Value.ToString();
+            Ime = objCmd.Parameters["@PunoIme"].Value.ToString();
             result = Convert.ToInt32(objCmd.Parameters["@err"].Value);
 
             objConn.Close();
@@ -319,6 +315,199 @@ public class Utility
             throw new Exception("Error in function proveriKrajUTabeliTerminPredavanja: " + ex.Message);
         }
     }
+
+
+    public void getTerminPredavanjaKraj(int idosoba, out int IDTerminPredavanja, out int IDLokacija, out int IDLogPredavanja, out List<int> predmetiList)
+    {
+        IDTerminPredavanja=0;
+        IDLokacija = 0;
+        IDLogPredavanja = 0;
+        predmetiList = new List<int>();
+
+        string upit = @"SELECT        TOP (100) PERCENT dbo.TerminPredavanja.IDTerminPredavanja, dbo.TerminPredavanja.IDLokacija, dbo.TerminPredavanja.IDLogPredavanja, dbo.Predmet.IDPredmet
+                        FROM            dbo.TerminPredavanja INNER JOIN
+                         dbo.PredavanjeUTerminu ON dbo.TerminPredavanja.IDTerminPredavanja = dbo.PredavanjeUTerminu.IDTerminPredavanja INNER JOIN
+                         dbo.Predavanje ON dbo.PredavanjeUTerminu.IDPredavanje = dbo.Predavanje.IDPredavanje INNER JOIN
+                         dbo.Predmet ON dbo.Predavanje.IDPredmet = dbo.Predmet.IDPredmet
+                        WHERE        (dbo.TerminPredavanja.IDOsobaPredavac = @idosoba) AND (dbo.TerminPredavanja.Kraj IS NULL)";
+
+        using (SqlConnection objConn = new SqlConnection(bioconnectionstring))
+        {
+            using (SqlCommand objCmd = new SqlCommand(upit, objConn))
+            {
+                try
+                {
+                    objCmd.CommandType = System.Data.CommandType.Text;
+                    objCmd.Parameters.Add("@idosoba", System.Data.SqlDbType.Int).Value = idosoba;
+                    objConn.Open();
+                    SqlDataReader reader = objCmd.ExecuteReader();
+                    if (reader.HasRows)
+                    {
+                        while (reader.Read())
+                        {
+                            IDTerminPredavanja = reader.GetInt32(0);
+                            IDLokacija = reader.GetInt32(1);
+                            IDLogPredavanja = reader.GetInt32(2);
+                            predmetiList.Add(reader.GetInt32(3));
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    log.Error("Error while getting TerminPredavanjaKraj. " + ex.Message);
+                    throw new Exception("Error while getting TerminPredavanjaKraj. " + ex.Message);
+                }
+            }
+        }
+    }
+
+
+    public string getPredmetNaziv(int idOsoba, int idPredmet)
+    {
+        string NazivPredmeta = string.Empty;
+
+        string upit = @"SELECT NazivPredmeta FROM dbo.vPredavanjaNastavnika WHERE (IDOsoba = @idosoba) AND (IDPredmet = @idpredmet)";
+
+        using (SqlConnection objConn = new SqlConnection(bioconnectionstring))
+        {
+            using (SqlCommand objCmd = new SqlCommand(upit, objConn))
+            {
+                try
+                {
+                    objCmd.CommandType = System.Data.CommandType.Text;
+                    objCmd.Parameters.Add("@idosoba", System.Data.SqlDbType.Int).Value = idOsoba;
+                    objCmd.Parameters.Add("@idpredmet", System.Data.SqlDbType.Int).Value = idPredmet;
+                    objConn.Open();
+                    SqlDataReader reader = objCmd.ExecuteReader();
+                    if (reader.Read())
+                    {
+                        NazivPredmeta = reader.GetString(0);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    log.Error("Error in fuction getPredmetNaziv. " + ex.Message);
+                    throw new Exception("Error in fuction getPredmetNaziv. " + ex.Message);
+                }
+            }
+        }
+
+        return NazivPredmeta;
+    }
+
+
+    public string getTipPredavanja(int idosoba, int IDTerminPredavanja, int IDLokacija, int IDLogPredavanja)
+    {
+        string tipPredavanja = string.Empty;
+
+        string upit = @"SELECT        dbo.TipPredavanja.TipPredavanja
+FROM            dbo.TerminPredavanja INNER JOIN
+                         dbo.PredavanjeUTerminu ON dbo.TerminPredavanja.IDTerminPredavanja = dbo.PredavanjeUTerminu.IDTerminPredavanja INNER JOIN
+                         dbo.Predavanje ON dbo.PredavanjeUTerminu.IDPredavanje = dbo.Predavanje.IDPredavanje INNER JOIN
+                         dbo.TipPredavanja ON dbo.Predavanje.IDTipPredavanja = dbo.TipPredavanja.IDTipPredavanja
+WHERE        (dbo.TerminPredavanja.IDOsobaPredavac = @idosoba) AND (dbo.TerminPredavanja.IDTerminPredavanja = @idterminpredavanja) AND (dbo.TerminPredavanja.IDLokacija = @idlokacija)";
+
+        using (SqlConnection objConn = new SqlConnection(bioconnectionstring))
+        {
+            using (SqlCommand objCmd = new SqlCommand(upit, objConn))
+            {
+                try
+                {
+                    objCmd.CommandType = System.Data.CommandType.Text;
+                    objCmd.Parameters.Add("@idosoba", System.Data.SqlDbType.Int).Value = idosoba;
+                    objCmd.Parameters.Add("@idterminpredavanja", System.Data.SqlDbType.Int).Value = IDTerminPredavanja;
+                    objCmd.Parameters.Add("@idlokacija", System.Data.SqlDbType.Int).Value = IDLokacija;
+                    objConn.Open();
+                    SqlDataReader reader = objCmd.ExecuteReader();
+                    if (reader.Read())
+                    {
+                        tipPredavanja = reader.GetString(0);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    log.Error("Error while getting itemTextEnglish. " + ex.Message);
+                    throw new Exception("Error while getting itemTextEnglish. " + ex.Message);
+                }
+            }
+        }
+
+        return tipPredavanja;
+    }
+
+
+
+    public void getIDTerminePredavanja(int IDTerminPredavanja, out List<int> idTerminiPredavanja)
+    {
+        idTerminiPredavanja = new List<int>();
+
+        string upit = @"SELECT        dbo.PredavanjeUTerminu.IDPredavanje
+FROM            dbo.TerminPredavanja INNER JOIN
+                         dbo.PredavanjeUTerminu ON dbo.TerminPredavanja.IDTerminPredavanja = dbo.PredavanjeUTerminu.IDTerminPredavanja
+WHERE        (dbo.TerminPredavanja.IDTerminPredavanja = @idterminpredavanja)";
+
+        using (SqlConnection objConn = new SqlConnection(bioconnectionstring))
+        {
+            using (SqlCommand objCmd = new SqlCommand(upit, objConn))
+            {
+                try
+                {
+                    objCmd.CommandType = System.Data.CommandType.Text;
+                    objCmd.Parameters.Add("@idterminpredavanja", System.Data.SqlDbType.Int).Value = IDTerminPredavanja;
+                    objConn.Open();
+                    SqlDataReader reader = objCmd.ExecuteReader();
+                    if (reader.HasRows)
+                    {
+                        while (reader.Read())
+                        {
+                            idTerminiPredavanja.Add(reader.GetInt32(0));
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    log.Error("Error in function getIDTerminePredavanja. " + ex.Message);
+                    throw new Exception("Error in function getIDTerminePredavanja. " + ex.Message);
+                }
+            }
+        }
+    }
+
+
+    public string getImeLokacije(int IDLokacije)
+    {
+        string ImeLokacije = string.Empty;
+
+        string upit = @"SELECT        NazivLokacije
+FROM            dbo.Lokacija
+WHERE        (IDLokacija = @idlokacije)";
+
+        using (SqlConnection objConn = new SqlConnection(bioconnectionstring))
+        {
+            using (SqlCommand objCmd = new SqlCommand(upit, objConn))
+            {
+                try
+                {
+                    objCmd.CommandType = System.Data.CommandType.Text;
+                    objCmd.Parameters.Add("@idlokacije", System.Data.SqlDbType.Int).Value = IDLokacije;
+                    objConn.Open();
+                    SqlDataReader reader = objCmd.ExecuteReader();
+                    if (reader.Read())
+                    {
+                        ImeLokacije = reader.GetString(0);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    log.Error("Error while getting itemTextEnglish. " + ex.Message);
+                    throw new Exception("Error while getting itemTextEnglish. " + ex.Message);
+                }
+            }
+        }
+
+        return ImeLokacije;
+    }
+
     /*
     public void upisiOrganizaciju(string organizacija)
     {

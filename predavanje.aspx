@@ -66,7 +66,6 @@
 				        <article class="navbar-nav ml-auto mt-2 px-lg-5">
                             <span id="lbl_Operater" style="font-size:21px;">&nbsp;Dobrodošli, &nbsp;</span>
                             <asp:Label ID="lbl_Ime" runat="server" style="font-size:21px;" Text="LabelIme" Visible="true"></asp:Label>&nbsp;
-                            <asp:Label ID="lbl_Prezime" runat="server" style="font-size:21px;" Text="LabelPrezime" Visible="true"></asp:Label>
                             <asp:Button ID="btnLogout" runat="server" Text="Odjava" CssClass="btn btn-outline-secondary ml-4 px-md-3 py-md-1" OnClick="btnLogout_Click" OnClientClick="unhook()"/>
 				        </article>                        
 			        </div><!--header navigation end-->

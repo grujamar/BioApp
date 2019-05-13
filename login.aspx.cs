@@ -85,14 +85,13 @@ public partial class login : System.Web.UI.Page
                 int IDLokacija = Convert.ToInt32(Session["login-IDLokacija"]);
                 int IDLogPredavanja = 0;
                 int IDOsoba = 0;
-                string Ime = string.Empty;
-                string Prezime = string.Empty;
+                string ImePrezime = string.Empty;
                 int Result = 0;
 
                 Utility utility = new Utility();
 
-                utility.loginPredavanja(txtUsername.Text, IDLokacija, out IDLogPredavanja, out IDOsoba, out Ime, out Prezime, out Result);
-                log.Debug("Login Predavanja: " + " Sifra lokacije - " + IDLokacija + " " + ". Username - " + txtUsername.Text + " " + ". IDLogPredavanja - " + IDLogPredavanja + " " + ". idOsoba - " + IDOsoba + " " + ". Ime - " + Ime + " " + ". Prezime - " + Prezime + " " + ". Rezultat - " + Result);
+                utility.loginPredavanja(txtUsername.Text, IDLokacija, out IDLogPredavanja, out IDOsoba, out ImePrezime, out Result);
+                log.Debug("Login Predavanja: " + " Sifra lokacije - " + IDLokacija + " " + ". Username - " + txtUsername.Text + " " + ". IDLogPredavanja - " + IDLogPredavanja + " " + ". idOsoba - " + IDOsoba + " " + ". Ime - " + ImePrezime + " " + ". Rezultat - " + Result);
 
                 if (Result != 0)
                 {
@@ -100,8 +99,7 @@ public partial class login : System.Web.UI.Page
                 }
                 else
                 {
-                    Session["login_Ime"] = Ime;
-                    Session["login_Prezime"] = Prezime;
+                    Session["login_Ime"] = ImePrezime;
                     Session["lbl_loginID"] = IDOsoba;
                     Session["login_IDLogPredavanja"] = IDLogPredavanja;
 

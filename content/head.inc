@@ -8,7 +8,7 @@
 <!-- Bootstrap CSS -->
 <link href="css/bootstrap.css" rel="stylesheet" type="text/css"/>
 <!-- Font Awesome-->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"/>
+<link href="css/font-awesome.min.css" rel="stylesheet" type="text/css"/>
 <!--theme css-->
 <link href="css/style-login.css" rel="stylesheet" type="text/css"/>
 <link href="css/style.css" rel="stylesheet" type="text/css"/>

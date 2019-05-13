@@ -73,7 +73,6 @@
 				        <article class="navbar-nav ml-auto mt-2 px-lg-5">
                             <span id="lbl_Operater" style="font-size:21px;">&nbsp;Dobrodošli, &nbsp;</span>
                             <asp:Label ID="lbl_Ime" runat="server" style="font-size:21px;" Text="LabelIme" Visible="true"></asp:Label>&nbsp;
-                            <asp:Label ID="lbl_Prezime" runat="server" style="font-size:21px;" Text="LabelPrezime" Visible="true"></asp:Label>
                             <asp:Button ID="btnLogout" runat="server" Text="Odjava" CssClass="btn btn-outline-secondary ml-4 px-md-3 py-md-1" OnClick="btnLogout_Click" OnClientClick="unhook()"/>
 				        </article>                        
 			        </div><!--header navigation end-->
@@ -87,7 +86,7 @@
                 <div class="container">
                     <!--lead-section start-->
                     <section class="lead-section my-4">
-                        <asp:Label id="lblstranicanaziv" runat="server" CssClass="page-name"> Pregled predavanja </asp:Label>
+                        <asp:Label id="lblstranicanaziv" runat="server" CssClass="page-name"> </asp:Label>
                     </section><!--lead-section end-->
                     <!--section checkbox start-->
                     <section class="checkbox-section">
@@ -103,8 +102,9 @@
                         <asp:CheckBoxList 
                             ID="CheckBoxList1"
                             runat="server"
-                            Font-Italic="True"
-                            Font-Names="Courier New"
+                            Font-Italic="false"
+                            Font-Names="Times New Roman"
+                            CssClass="mycheckbox"
                             Font-Size="Medium" DataSourceID="dsPredmeti" DataTextField="NazivPredmeta" DataValueField="IDPredmet"
                             >
                             <asp:ListItem></asp:ListItem>
