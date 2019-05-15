@@ -15,4 +15,9 @@ $(document).ready(function () {
             showURL: false
         });
     }
+
+
+    $(function () {
+        $('[data-toggle="popover"]').popover();
+    });
 });

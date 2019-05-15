@@ -36,11 +36,12 @@ public partial class index : System.Web.UI.Page
         {
             int idOsoba = Convert.ToInt32(Session["lbl_loginID"]);
             int IDTerminPredavanja = 0;
-            int IDLokacija = 0;
+            int IDLokacija = Convert.ToInt32(Session["login-IDLokacija"]);
             int IDLogPredavanja = 0;
             List<int> predmetiList = new List<int>();
-            utility.getTerminPredavanjaKraj(idOsoba, out IDTerminPredavanja, out IDLokacija, out IDLogPredavanja, out predmetiList);
-            log.Debug("Check in table TerminPredavanja if Kraj is null. IDTerminPredavanja - " + IDTerminPredavanja + " IDLokacija - " + IDLokacija + " IDLogPredavanja - " + IDLogPredavanja + " predmetiList.Count - " + predmetiList.Count);
+            TimeSpan d1 = new TimeSpan();
+            utility.getTerminPredavanjaKraj(idOsoba, IDLokacija, out IDTerminPredavanja, out IDLogPredavanja, out predmetiList, out d1);
+            log.Debug("Check in table TerminPredavanja if Kraj is null. IDTerminPredavanja - " + IDTerminPredavanja + " IDLokacija - " + IDLokacija + " IDLogPredavanja - " + IDLogPredavanja + " predmetiList.Count - " + predmetiList.Count + " Pocetak - " + d1);
 
             lblstranicanaziv.Text = utility.getImeLokacije(Convert.ToInt32(Session["login-IDLokacija"]));
             log.Debug("Location name - " + lblstranicanaziv.Text);
@@ -51,7 +52,11 @@ public partial class index : System.Web.UI.Page
                 utility.getIDTerminePredavanja(IDTerminPredavanja, out idTerminiPredavanja);
                 log.Debug("IDTerminiPredavanja.Count - " + idTerminiPredavanja.Count);
                 Session["Predavanja-idPonovnogPredavanja"] = idTerminiPredavanja;
-                Session["Predavanja-idTerminPonovnogPredavanja"] = IDTerminPredavanja;
+                //Session["Predavanja-idTerminPonovnogPredavanja"] = IDTerminPredavanja;
+                Session["Predavanje_idTerminPredavanja"] = IDTerminPredavanja;
+                Session["Predavanje_idLokacija"] = IDLokacija;
+
+                Session["Predavanja_VremeZapocinjanja"] = d1;
 
                 List<string> predmetiNaziv = new List<string>();
                 predmetiNaziv = getPredmetiNaziv(utility, predmetiList, idOsoba);
@@ -68,12 +73,16 @@ public partial class index : System.Web.UI.Page
                 {
                     lbl_Ime.Text = Session["login_Ime"].ToString();
 
-                    //ShowHideDiv(false);
                     HideDatepicker();
                 }
                 else
                 {
-                    Response.Redirect("login.aspx", false);
+                    int IDLokacija1 = Convert.ToInt32(Session["login-IDLokacija"]);
+                    string location = @"idLokacija=" + IDLokacija1;
+                    string encryptedParameters = AuthenticatedEncryption.AuthenticatedEncryption.Encrypt(location, Constants.CryptKey, Constants.AuthKey);
+                    encryptedParameters = encryptedParameters.Replace("+", "%252b");
+                    log.Debug("encryptedParameters, when trying to logout is - " + encryptedParameters);
+                    Response.Redirect(string.Format("~/login.aspx?d={0}", encryptedParameters), false);
                 }
             }
         }      
@@ -143,7 +152,13 @@ public partial class index : System.Web.UI.Page
                 Session["lbl_loginID"] = null;
                 Session["login_IDLogPredavanja"] = null;
 
-                Response.Redirect("Login.aspx?d=" + Session["login-encryptedParameters"].ToString(), false);
+                int IDLokacija = Convert.ToInt32(Session["login-IDLokacija"]);
+                string location = @"idLokacija=" + IDLokacija;
+                string encryptedParameters = AuthenticatedEncryption.AuthenticatedEncryption.Encrypt(location, Constants.CryptKey, Constants.AuthKey);
+                encryptedParameters = encryptedParameters.Replace("+", "%252b");
+                log.Debug("encryptedParameters, when trying to logout is - " + encryptedParameters);
+                Response.Redirect(string.Format("~/login.aspx?d={0}", encryptedParameters), false);
+   
             }
         }
         catch (Exception ex)

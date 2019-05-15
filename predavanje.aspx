@@ -22,20 +22,13 @@
             });
         }
         function onMouseOver(rowIndex) {
-            var gv = document.getElementById("GridView1");
-            var rowElement = gv.rows[rowIndex];
-            rowElement.style.backgroundColor = "#d3ddcc";
+             document.getElementById("GridView1").rows[rowIndex].style.backgroundColor = "#d3ddcc";
         }
         function onMouseOut(rowIndex) {
-            var gv = document.getElementById("GridView1");
-            var rowElement = gv.rows[rowIndex];
-            rowElement.style.backgroundColor = "#BEBEBE";
+            document.getElementById("GridView1").rows[rowIndex].style.backgroundColor = "#BEBEBE";
         }
         function onMouseOutWhite(rowIndex) {
-            var gv = document.getElementById("GridView1");
-            var rowElement = gv.rows[rowIndex];
-            rowElement.style.backgroundColor = "#FFFFFF";
-
+            document.getElementById("GridView1").rows[rowIndex].style.backgroundColor = "#FFFFFF";
         }
         var new_var = true;
         window.onbeforeunload = function () {
@@ -134,7 +127,7 @@
                                                                     <table>
                                                                     <tr>
                                                                     <%--Image to Show on Hover--%>
-                                                                    <td><asp:Image ID="imgUserName" Width="252px" Height="264px" ImageUrl='<%# System.Configuration.ConfigurationManager.AppSettings["FotografijeFolder"] + Eval("BrojSlike") + ".jpg" %>' runat="server" /></td>
+                                                                    <td><asp:Image ID="imgUserName" Width="202px" Height="264px" ImageUrl='<%# System.Configuration.ConfigurationManager.AppSettings["FotografijeFolder"] + Eval("BrojSlike") + ".jpg" %>' runat="server" /></td>
                                                                     </tr>
                                                                     </table>
                                                                     </div>
@@ -149,7 +142,7 @@
                                                         <asp:BoundField DataField="DaLiSePrijavaOdnosiNaTrenutniTermin" HeaderText="DaLiSePrijavaOdnosiNaTrenutniTermin" ReadOnly="True" SortExpression="DaLiSePrijavaOdnosiNaTrenutniTermin" Visible="false"/>
                                                         <asp:TemplateField>                                
                                                         <ItemTemplate>                                    
-                                                            <asp:Button ID="btnClear" runat="server" CommandName="DeleteProfile" ToolTip="Poništi" Text="Poništi prisutvo" CommandArgument='<%# Container.DisplayIndex %>' CssClass="Submit-btnClear" onclientclick="unhook()"/>                                 
+                                                            <asp:Button ID="btnClear" runat="server" CommandName="DeleteProfile" ToolTip="" Text="" CommandArgument='<%# Container.DisplayIndex %>' CssClass="Submit-btnClear" OnClientClick="unhook()"/>                                 
                                                         </ItemTemplate>
                                                         <ItemStyle HorizontalAlign="Center" />
                                                         </asp:TemplateField>

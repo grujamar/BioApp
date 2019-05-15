@@ -24,49 +24,63 @@ public partial class login : System.Web.UI.Page
         }
         AvoidCashing();
 
-        string encryptedParameters = Request.QueryString["d"];
-        Session["login-encryptedParameters"] = encryptedParameters; 
-
-        if ((encryptedParameters != string.Empty) && (encryptedParameters != null))
+        try
         {
-            // replace encoded plus sign "%2b" with real plus sign +
-            encryptedParameters = encryptedParameters.Replace("%2b", "+");
-            string decryptedParameters = AuthenticatedEncryption.AuthenticatedEncryption.Decrypt(encryptedParameters, Constants.CryptKey, Constants.AuthKey);
+            string encryptedParameters = Request.QueryString["d"];
+            log.Debug("encryptedParameters on Login page - " + encryptedParameters);
 
-            HttpRequest req = new HttpRequest("", "http://www.pis.rs", decryptedParameters);
-
-            string data = req.QueryString["IDLokacija"];
-
-            if ((data != string.Empty) && (data != null))
+            if ((encryptedParameters != string.Empty) && (encryptedParameters != null))
             {
-                Session["login-IDLokacija"] = data;
-            }
-            else
-            {
-                Session["login-IDLokacija"] = "0";
-            }
+                // replace encoded plus sign "%2b" with real plus sign +
+                encryptedParameters = encryptedParameters.Replace("%2b", "+");
 
-            if (!Page.IsPostBack)
-            {
-                if (Session["login-IDLokacija"] != null)
+                string decryptedParameters = AuthenticatedEncryption.AuthenticatedEncryption.Decrypt(encryptedParameters, Constants.CryptKey, Constants.AuthKey);
+
+                if (decryptedParameters == null)
                 {
-                    int idLokacija = Convert.ToInt32(Session["login-IDLokacija"]);
-                    if (idLokacija != 0)
+                    throw new Exception("decryptedParameters error. ");
+                }
+
+                HttpRequest req = new HttpRequest("", "http://www.pis.rs", decryptedParameters);
+
+                string data = req.QueryString["IDLokacija"];
+
+                if ((data != string.Empty) && (data != null))
+                {
+                    Session["login-IDLokacija"] = data;
+                }
+                else
+                {
+                    Session["login-IDLokacija"] = "0";
+                }
+
+                if (!Page.IsPostBack)
+                {
+                    if (Session["login-IDLokacija"] != null)
                     {
-                        log.Info("Aplication successfully start. IDLokacija is: " + idLokacija);
-                    }
-                    else
-                    {
-                        Response.Redirect("GreskaLokacija.aspx", false); 
-                        log.Error("Error. IDLokacija is: " + encryptedParameters);
+                        int idLokacija = Convert.ToInt32(Session["login-IDLokacija"]);
+                        if (idLokacija != 0)
+                        {
+                            log.Info("Aplication successfully start. IDLokacija is: " + idLokacija);
+                        }
+                        else
+                        {
+                            Response.Redirect("GreskaLokacija.aspx", false);
+                            log.Error("Error. IDLokacija is: " + encryptedParameters);
+                        }
                     }
                 }
             }
+            else
+            {
+                Response.Redirect("GreskaLokacija.aspx", false);
+                log.Error("Error. IDLokacija is: " + encryptedParameters);
+            }
         }
-        else
+        catch (Exception ex)
         {
             Response.Redirect("GreskaLokacija.aspx", false);
-            log.Error("Error. IDLokacija is: " + encryptedParameters);
+            log.Error("Error. IDLokacija is: " + ex);
         }
     }
 

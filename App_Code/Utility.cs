@@ -317,19 +317,19 @@ public class Utility
     }
 
 
-    public void getTerminPredavanjaKraj(int idosoba, out int IDTerminPredavanja, out int IDLokacija, out int IDLogPredavanja, out List<int> predmetiList)
+    public void getTerminPredavanjaKraj(int idosoba, int IDLokacija, out int IDTerminPredavanja, out int IDLogPredavanja, out List<int> predmetiList, out TimeSpan d1)
     {
         IDTerminPredavanja=0;
-        IDLokacija = 0;
         IDLogPredavanja = 0;
         predmetiList = new List<int>();
+        d1= new TimeSpan();
 
-        string upit = @"SELECT        TOP (100) PERCENT dbo.TerminPredavanja.IDTerminPredavanja, dbo.TerminPredavanja.IDLokacija, dbo.TerminPredavanja.IDLogPredavanja, dbo.Predmet.IDPredmet
-                        FROM            dbo.TerminPredavanja INNER JOIN
+        string upit = @"SELECT        TOP (100) PERCENT dbo.TerminPredavanja.IDTerminPredavanja, dbo.TerminPredavanja.IDLogPredavanja, dbo.Predmet.IDPredmet, dbo.TerminPredavanja.Pocetak
+FROM            dbo.TerminPredavanja INNER JOIN
                          dbo.PredavanjeUTerminu ON dbo.TerminPredavanja.IDTerminPredavanja = dbo.PredavanjeUTerminu.IDTerminPredavanja INNER JOIN
                          dbo.Predavanje ON dbo.PredavanjeUTerminu.IDPredavanje = dbo.Predavanje.IDPredavanje INNER JOIN
                          dbo.Predmet ON dbo.Predavanje.IDPredmet = dbo.Predmet.IDPredmet
-                        WHERE        (dbo.TerminPredavanja.IDOsobaPredavac = @idosoba) AND (dbo.TerminPredavanja.Kraj IS NULL)";
+WHERE        (dbo.TerminPredavanja.IDOsobaPredavac = @idosoba) AND (dbo.TerminPredavanja.Kraj IS NULL) AND (dbo.TerminPredavanja.IDLokacija = @idlokacija)";
 
         using (SqlConnection objConn = new SqlConnection(bioconnectionstring))
         {
@@ -339,6 +339,7 @@ public class Utility
                 {
                     objCmd.CommandType = System.Data.CommandType.Text;
                     objCmd.Parameters.Add("@idosoba", System.Data.SqlDbType.Int).Value = idosoba;
+                    objCmd.Parameters.Add("@idlokacija", System.Data.SqlDbType.Int).Value = IDLokacija;
                     objConn.Open();
                     SqlDataReader reader = objCmd.ExecuteReader();
                     if (reader.HasRows)
@@ -346,9 +347,9 @@ public class Utility
                         while (reader.Read())
                         {
                             IDTerminPredavanja = reader.GetInt32(0);
-                            IDLokacija = reader.GetInt32(1);
-                            IDLogPredavanja = reader.GetInt32(2);
-                            predmetiList.Add(reader.GetInt32(3));
+                            IDLogPredavanja = reader.GetInt32(1);
+                            predmetiList.Add(reader.GetInt32(2));
+                            d1 = reader.GetTimeSpan(3);
                         }
                     }
                 }

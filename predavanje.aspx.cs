@@ -151,7 +151,7 @@ public partial class predavanje : System.Web.UI.Page
 
             Utility utility = new Utility();
 
-            if (Session["Predavanja-idTerminPonovnogPredavanja"] != null)
+            if (Session["Predavanja-idPonovnogPredavanja"] != null)
             {
                 idTerminiPredavanja = new List<int>();
                 idTerminiPredavanja = (List<int>)Session["Predavanja-idPonovnogPredavanja"];
@@ -164,20 +164,6 @@ public partial class predavanje : System.Web.UI.Page
                     {
                         throw new Exception("Result from database is diferent from 0. Result is: " + Result);
                     }
-                }
-
-                utility.zavrsavanjeTermina(Convert.ToInt32(Session["Predavanja-idTerminPonovnogPredavanja"]), d1TimeSpanTrimmed, out Result);
-                log.Debug("Zavrsavanje termina : " + " IdTerminPredavanja - " + Convert.ToInt32(Session["Predavanja-idTerminPonovnogPredavanja"]) + " " + ". Kraj - " + d1TimeSpanTrimmed + " " + ". Rezultat - " + Result);
-                if (Result != 0)
-                {
-                    throw new Exception("Result from database is diferent from 0. Result is: " + Result);
-                }
-                else
-                {
-                    btnLogout.Enabled = true;
-                    Response.Redirect("index.aspx", false); // this will tell .NET framework not to stop the execution of the current thread and hence the error will be resolved.
-                                                            //ShowHideDiv(false);
-                                                            //HideDatepicker();
                 }
             }
             else
@@ -194,25 +180,25 @@ public partial class predavanje : System.Web.UI.Page
                         throw new Exception("Result from database is diferent from 0. Result is: " + Result);
                     }
                 }
+            }
 
-                utility.zavrsavanjeTermina(Convert.ToInt32(Session["Predavanje_idTerminPredavanja"]), d1TimeSpanTrimmed, out Result);
-                log.Debug("Zavrsavanje termina : " + " IdTerminPredavanja - " + Convert.ToInt32(Session["Predavanje_idTerminPredavanja"]) + " " + ". Kraj - " + d1TimeSpanTrimmed + " " + ". Rezultat - " + Result);
-                if (Result != 0)
-                {
-                    throw new Exception("Result from database is diferent from 0. Result is: " + Result);
-                }
-                else
-                {
-                    btnLogout.Enabled = true;
-                    Response.Redirect("index.aspx", false); // this will tell .NET framework not to stop the execution of the current thread and hence the error will be resolved.
-                                                            //ShowHideDiv(false);
-                                                            //HideDatepicker();
-                }
+            utility.zavrsavanjeTermina(Convert.ToInt32(Session["Predavanje_idTerminPredavanja"]), d1TimeSpanTrimmed, out Result);
+            log.Debug("Zavrsavanje termina : " + " IdTerminPredavanja - " + Convert.ToInt32(Session["Predavanje_idTerminPredavanja"]) + " " + ". Kraj - " + d1TimeSpanTrimmed + " " + ". Rezultat - " + Result);
+            if (Result != 0)
+            {
+                throw new Exception("Result from database is diferent from 0. Result is: " + Result);
+            }
+            else
+            {
+                btnLogout.Enabled = true;
+                Response.Redirect("index.aspx", false); // this will tell .NET framework not to stop the execution of the current thread and hence the error will be resolved.
+                                                        //ShowHideDiv(false);
+                                                        //HideDatepicker();
             }
         }
         catch (Exception ex)
         {
-            if (Session["Predavanja-idTerminPonovnogPredavanja"] != null)
+            if (Session["Predavanja-idPonovnogPredavanja"] != null)
             {
                 increasePredmetiNazivi();
             }
@@ -235,7 +221,7 @@ public partial class predavanje : System.Web.UI.Page
 
         DateTime d2 = DateTime.Now;
 
-        TimeSpan span1 = d2 - Convert.ToDateTime(Session["Predavanja_VremeZapocinjanja"]);
+        TimeSpan span1 = d2 - Convert.ToDateTime(Session["Predavanja_VremeZapocinjanja"].ToString());
         trimmedSpan1 = new TimeSpan(span1.Hours, span1.Minutes, span1.Seconds);
 
         lblTime.Text = trimmedSpan1.ToString();
@@ -246,6 +232,17 @@ public partial class predavanje : System.Web.UI.Page
         if (e.Row.RowType == DataControlRowType.DataRow)
         {
             bool DaLiSePrijavaOdnosiNaTrenutniTermin = Convert.ToBoolean(DataBinder.Eval(e.Row.DataItem, "DaLiSePrijavaOdnosiNaTrenutniTermin"));
+            string TipStatusa = Convert.ToString(DataBinder.Eval(e.Row.DataItem, "TipStatusa"));
+
+            if (TipStatusa == "Poništen ručno")
+            {
+                Button btnButton = (Button)e.Row.FindControl("btnClear");
+                btnButton.Text = "Vrati prisustvo";
+            }
+            else { 
+                Button btnButton = (Button)e.Row.FindControl("btnClear");
+                btnButton.Text = "Poništi prisustvo";
+            }
 
             if (!DaLiSePrijavaOdnosiNaTrenutniTermin)
             {
@@ -257,7 +254,7 @@ public partial class predavanje : System.Web.UI.Page
             {
                 e.Row.BackColor = ColorTranslator.FromHtml(SetWhite);
                 e.Row.Attributes["onmouseover"] = "onMouseOver('" + (e.Row.RowIndex + 1) + "')";
-                e.Row.Attributes["onmouseoutwhite"] = "onMouseOutWhite('" + (e.Row.RowIndex + 1) + "')";
+                e.Row.Attributes["onmouseout"] = "onMouseOutWhite('" + (e.Row.RowIndex + 1) + "')";
             }
 
             e.Row.Cells[6].BackColor = ColorTranslator.FromHtml(Convert.ToString((DataBinder.Eval(e.Row.DataItem, "Boja"))));
