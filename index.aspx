@@ -109,7 +109,7 @@
                             >
                             <asp:ListItem></asp:ListItem>
                         </asp:CheckBoxList>
-                        <asp:SqlDataSource ID="dsPredmeti" runat="server" ConnectionString="<%$ ConnectionStrings:BioConnectionString %>" SelectCommand="SELECT IDPredmet, NazivPredmeta FROM vPredavanjaNastavnika WHERE (IDOsoba = @idosoba)">
+                        <asp:SqlDataSource ID="dsPredmeti" runat="server" ConnectionString="<%$ ConnectionStrings:BioConnectionString %>" SelectCommand="SELECT IDPredmet, NazivPredmeta, BrojAkreditacije FROM vPredavanjaNastavnika WHERE (IDOsoba = @idosoba) ORDER BY NazivPredmeta, SifraPredmeta">
                             <SelectParameters>
                                 <asp:SessionParameter Name="idosoba" SessionField="lbl_loginID" DefaultValue="" />
                             </SelectParameters>
@@ -128,7 +128,7 @@
                                         <asp:DropDownList ID="ddlizbor" runat="server" AppendDataBoundItems="True" AutoPostBack="True" CssClass="submit-dropdownlist" OnSelectedIndexChanged="ddlizbor_SelectedIndexChanged" TabIndex="2" DataSourceID="dsTipPredavanja" DataTextField="TipPredavanja" DataValueField="IDTipPredavanja">
                                         <asp:ListItem Selected="True" Value="0">--Izaberite--</asp:ListItem>
                                         </asp:DropDownList>
-                                        <asp:SqlDataSource ID="dsTipPredavanja" runat="server" ConnectionString="<%$ ConnectionStrings:BioConnectionString %>" SelectCommand="SELECT [IDTipPredavanja], [TipPredavanja] FROM [TipPredavanja]"></asp:SqlDataSource>
+                                        <asp:SqlDataSource ID="dsTipPredavanja" runat="server" ConnectionString="<%$ ConnectionStrings:BioConnectionString %>" SelectCommand="SELECT [IDTipPredavanja], [TipPredavanja] FROM [vTipPredavanja]"></asp:SqlDataSource>
                                     </div>
                                     <div class="col-12 col-lg-5 mb-3 mb-lg-0">
                                         <asp:CustomValidator runat="server" id="cvizbor" controltovalidate="ddlizbor" errormessage="" OnServerValidate="Cvizbor_ServerValidate" CssClass="submit-customValidator" Display="Dynamic" ForeColor="Red" ValidateEmptyText="true" ValidationGroup="AddCustomValidatorToGroup"/>

@@ -31,7 +31,8 @@
         <form name="login-form" class="login-form" method="post" runat="server" >
             <div class="header">
                 <h1>Predavanja</h1>
-                <span>Popunite vaše korisničke informacije kako bi se ulogovali u sistem.</span>
+                <asp:Label ID="lblLocation" runat="server" style="font-size:15px;" ForeColor="Gray"></asp:Label><br>
+                <span>Popunite vaše korisničke informacije.</span>
             </div>
             <div class="content">
                 <asp:TextBox ID="txtUsername" runat="server" CssClass="input username" maxlength="25" TabIndex="1" placeholder="Korisničko ime"></asp:TextBox>

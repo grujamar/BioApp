@@ -69,7 +69,7 @@
         <main>
             <asp:ScriptManager ID="ScriptManager1" runat="server" />
             <div id="afterStarting" runat="server" class="after-starting">
-                <section class="mt-3">
+                <section class="my-3">
                     <div class="container">
                         <div class="row">
                             <div class="col-12 col-md-3 mb-1 text-left">
@@ -95,6 +95,38 @@
                             </asp:UpdatePanel>
                             <div class="col-12 col-md-3 mb-1 ml-auto py-2">
                                 <asp:Button ID="btnEnd" runat="server" Text="Završi predavanje" CssClass="btn btn-danger btn-lg px-5" OnClick="btnEnd_Click" OnClientClick="unhook()" TabIndex="10"/> 
+                            </div>
+                        </div>
+                        <div class="row mt-0">
+                            <div class="col-12 text-center mb-3">
+                                <asp:Label id="lblstranicanaziv" runat="server" CssClass="page-name"> </asp:Label>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-12 col-md-2 mb-1">
+                            </div>
+                            <div class="col-12 col-md-8 mb-1 text-center">
+                                <asp:UpdatePanel id="UpdatePanel1" runat="server"  UpdateMode="Conditional">
+                                    <ContentTemplate>
+                                        <fieldset>
+                                            <div class="row">
+                                                <div class="col-8 d-flex">
+                                                    <div class="w-50">
+                                                        <asp:TextBox ID="txtIndexNumber" runat="server" CssClass="submit-textbox" maxlength="20" placeholder="upiši broj indeksa"></asp:TextBox>
+                                                    </div>
+                                                    <aside class="w-50">
+                                                        <asp:Button ID="btnAddIndex" runat="server" Text="+ Dodaj prisustvo" CssClass="btn btn-secondary px-3" OnClick="btnAddIndex_Click" OnClientClick="unhook()"/>
+                                                    </aside>
+                                                </div>
+                                                <div class="col-4">
+                                                    <asp:CustomValidator ID="cvIndexNumber" runat="server" ErrorMessage="" controltovalidate="txtIndexNumber" Display="Dynamic" ForeColor="Red" CssClass="submit-customValidator" ValidateEmptyText="true" OnServerValidate="cvIndexNumber_ServerValidate" ValidationGroup="AddCustomValidatorToGroup"></asp:CustomValidator>
+                                                </div>
+                                            </div>
+                                        </fieldset>
+                                    </ContentTemplate>
+                                </asp:UpdatePanel>
+                            </div>
+                            <div class="col-12 col-md-2 mb-1">
                             </div>
                         </div>
                     </div>

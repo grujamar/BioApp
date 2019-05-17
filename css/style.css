@@ -60,10 +60,11 @@ html{
 
 /*MAIN*/
 
-.lead-section .page-name {
+.lead-section .page-name,
+#afterStarting .page-name {
     font-size: 20px;
     font-weight: bold;
-    color:#6b6b6b;
+    color: #6b6b6b;
 }
 
 .checkbox-section {
@@ -223,3 +224,13 @@ html{
         margin: 0;
     }
 
+
+
+#afterStarting .submit-textbox {
+    font-size: 14px;
+    border: 1.5px solid #bdbdbd;
+    background: rgba(255,255,255,0);
+    box-shadow: 0 0 1px #bdbdbd inset;
+    padding: 7px 10px;
+    
+}

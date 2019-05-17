@@ -128,7 +128,7 @@ public static class Utils
 
 
 
-    public static bool ValidateListSize(int SelectedValue, out string ErrorMessage)
+    public static bool ValidateListSize(int SelectedValue, List<int> brojAkreditacijeList, out string ErrorMessage)
     {
         bool returnValue = true;
         ErrorMessage = string.Empty;
@@ -142,6 +142,19 @@ public static class Utils
         {
             ErrorMessage = "";
             returnValue = true;
+        }
+        else if (SelectedValue == 2)
+        {
+            if (brojAkreditacijeList[0] != brojAkreditacijeList[1])
+            {
+                ErrorMessage = "Ne možete izabrati dva predmeta sa istom akreditacijom.";
+                returnValue = false;
+            }
+            else
+            {
+                ErrorMessage = "";
+                returnValue = true;
+            }
         }
         else if (SelectedValue > 2)
         {
@@ -169,6 +182,24 @@ public static class Utils
             ErrorMessage = "Tip predavanja je obavezno polje. ";
             returnValue = false;
         }else{
+            returnValue = true;
+        }
+
+        return returnValue;
+    }
+
+    public static bool ValidateIndexNumber(string SelectedValue, out string ErrorMessage)
+    {
+        bool returnValue = true;
+        ErrorMessage = string.Empty;
+
+        if (SelectedValue == string.Empty)
+        {
+            ErrorMessage = "Broj indeksa je obavezno polje. ";
+            returnValue = false;
+        }
+        else
+        {
             returnValue = true;
         }
 

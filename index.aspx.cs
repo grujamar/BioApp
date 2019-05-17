@@ -173,9 +173,11 @@ public partial class index : System.Web.UI.Page
         try
         {
             string ErrorMessage = string.Empty;
-
+            Utility utility = new Utility();
             // Create the list to store.
             List<string> CheckBoxList = new List<string>();
+
+            List<int> BrojAkreditacijeList = new List<int>();
             // Loop through each item.
             foreach (ListItem item in CheckBoxList1.Items)
             {
@@ -183,14 +185,13 @@ public partial class index : System.Web.UI.Page
                 {
                     // If the item is selected, add the value to the list.
                     CheckBoxList.Add(item.Value);
+                    int brojAkreditacije = utility.getBrojAkreditacije(item.ToString());
+                    BrojAkreditacijeList.Add(brojAkreditacije);
                 }
-                else
-                {
-                    // Item is not selected, do something else.
-                } 
             }
+
             int sizeOfList = CheckBoxList.Count;
-            args.IsValid = Utils.ValidateListSize(sizeOfList, out ErrorMessage);
+            args.IsValid = Utils.ValidateListSize(sizeOfList, BrojAkreditacijeList, out ErrorMessage);
             cvCheckbox.ErrorMessage = ErrorMessage;
         }
         catch (Exception)

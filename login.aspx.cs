@@ -62,6 +62,8 @@ public partial class login : System.Web.UI.Page
                         if (idLokacija != 0)
                         {
                             log.Info("Aplication successfully start. IDLokacija is: " + idLokacija);
+                            lblLocation.Text = utility.getImeLokacije(idLokacija);
+                            log.Debug("Location name - " + lblLocation.Text);
                         }
                         else
                         {

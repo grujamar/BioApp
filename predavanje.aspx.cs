@@ -45,6 +45,8 @@ public partial class predavanje : System.Web.UI.Page
                 btnLogout.Enabled = false;
                 TimeSpan trimmedSpan1;
                 TimeSpanNow(out trimmedSpan1);
+                lblstranicanaziv.Text = utility.getImeLokacije(Convert.ToInt32(Session["login-IDLokacija"]));
+                log.Debug("Location name - " + lblstranicanaziv.Text);
             }
         }
     }
@@ -313,6 +315,61 @@ public partial class predavanje : System.Web.UI.Page
         {
             log.Error("Clear GW button error. " + ex.Message);
             ScriptManager.RegisterStartupScript(this, GetType(), "erroralert", "erroralert();", true);
+        }
+    }
+
+
+    protected void btnAddIndex_Click(object sender, EventArgs e)
+    {
+        try
+        {
+            Page.Validate("AddCustomValidatorToGroup");
+
+            if (Page.IsValid)
+            {
+                Utility utility = new Utility();
+
+                DateTime dateTime = DateTime.Now;
+                DateTime dateOnly = dateTime.Date;
+                TimeSpan timeOfDay = DateTime.Now.TimeOfDay;
+                TimeSpan timeOnly = new TimeSpan(timeOfDay.Hours, timeOfDay.Minutes, timeOfDay.Seconds);
+
+                int Result = 0;
+
+                utility.upisivanjePrisustvaRucno(txtIndexNumber.Text, Convert.ToInt32(Session["login-IDLokacija"]), dateOnly, timeOnly, out Result);
+                log.Debug("upisivanjePrisustvaRucno : " + " BrojIndeksa - " + txtIndexNumber.Text + " " + ". IDLokacije - " + Convert.ToInt32(Session["login-IDLokacija"]) + " " + ". Datum - " + dateOnly + " " + ". Vreme - " + timeOnly + " " + ". Rezultat - " + Result);
+                if (Result != 0)
+                {
+                    throw new Exception("Result from database is diferent from 0. Result is: " + Result);
+                }
+                else {
+                    txtIndexNumber.Text = string.Empty;
+                }
+            }
+            else if (!Page.IsValid)
+            {
+                ScriptManager.RegisterStartupScript(this, GetType(), "erroralert", "erroralert();", true);
+            }
+        }
+        catch (Exception ex)
+        {
+            log.Error("btnAddIndex submit error. " + ex.Message);
+            ScriptManager.RegisterStartupScript(this, GetType(), "erroralert", "erroralert();", true);
+        }
+    }
+
+    protected void cvIndexNumber_ServerValidate(object source, ServerValidateEventArgs args)
+    {
+        try
+        {
+            string ErrorMessage = string.Empty;
+            args.IsValid = Utils.ValidateIndexNumber(txtIndexNumber.Text, out ErrorMessage);
+            cvIndexNumber.ErrorMessage = ErrorMessage;
+        }
+        catch (Exception)
+        {
+            cvIndexNumber.ErrorMessage = string.Empty;
+            args.IsValid = false;
         }
     }
 }

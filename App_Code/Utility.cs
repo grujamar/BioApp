@@ -509,6 +509,73 @@ WHERE        (IDLokacija = @idlokacije)";
         return ImeLokacije;
     }
 
+
+    public int getBrojAkreditacije(string nazivPredmeta)
+    {
+        int BrojAkreditacije = 0;
+
+        string upit = @"SELECT        TOP (1) PERCENT BrojAkreditacije
+                        FROM            dbo.vPredavanjaNastavnika
+                        WHERE        (NazivPredmeta = @nazivpredmeta)";
+
+        using (SqlConnection objConn = new SqlConnection(bioconnectionstring))
+        {
+            using (SqlCommand objCmd = new SqlCommand(upit, objConn))
+            {
+                try
+                {
+                    objCmd.CommandType = System.Data.CommandType.Text;
+                    objCmd.Parameters.AddWithValue("@nazivpredmeta", nazivPredmeta);
+                    objConn.Open();
+                    SqlDataReader reader = objCmd.ExecuteReader();
+                    if (reader.Read())
+                    {
+                        BrojAkreditacije = reader.GetInt32(0);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    log.Error("Error while getting BrojAkreditacije. " + ex.Message);
+                    throw new Exception("Error while getting BrojAkreditacije. " + ex.Message);
+                }
+            }
+        }
+
+        return BrojAkreditacije;
+    }
+
+
+
+    public void upisivanjePrisustvaRucno(string brojIndeksa, int idLokacija, DateTime datum, TimeSpan Vreme, out int result)
+    {
+        try
+        {
+            SqlConnection objConn = new SqlConnection(bioconnectionstring);
+            SqlCommand objCmd = new SqlCommand("spUpisivanjePrisustvaRucno", objConn);
+            objCmd.CommandType = CommandType.StoredProcedure;
+
+            objCmd.Parameters.AddWithValue("@brojIndeksa", brojIndeksa);
+            objCmd.Parameters.Add("@idLokacija", System.Data.SqlDbType.Int).Value = idLokacija;
+            objCmd.Parameters.AddWithValue("@datum", datum);
+            objCmd.Parameters.AddWithValue("@vreme", Vreme);
+
+            objCmd.Parameters.Add("@err", System.Data.SqlDbType.Int);
+            objCmd.Parameters["@err"].Direction = ParameterDirection.ReturnValue;
+
+            objConn.Open();
+            objCmd.ExecuteNonQuery();
+
+            //Retrieve the value of the output parameter
+            result = Convert.ToInt32(objCmd.Parameters["@err"].Value);
+
+            objConn.Close();
+        }
+        catch (Exception ex)
+        {
+            log.Error("Error in function upisivanjePrisustvaRucno. " + ex.Message);
+            throw new Exception("Error in function upisivanjePrisustvaRucno. " + ex.Message);
+        }
+    }
     /*
     public void upisiOrganizaciju(string organizacija)
     {

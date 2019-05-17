@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.28307.572
+VisualStudioVersion = 15.0.28307.645
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "BioApp(2)", ".", "{9F50E0BB-90DF-49B5-9A4E-8D337671BB78}"
 	ProjectSection(WebsiteProperties) = preProject
@@ -35,6 +35,6 @@ Global
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {88776309-FC68-4307-8F55-7B9D0C6FB36E}
+		SolutionGuid = {1714FBB5-DCEA-4BAD-B761-CF58BCDB6A3F}
 	EndGlobalSection
 EndGlobal
