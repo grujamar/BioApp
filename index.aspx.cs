@@ -32,60 +32,127 @@ public partial class index : System.Web.UI.Page
         AvoidCashing();
         ShowDatepicker();
 
-        if (!Page.IsPostBack)
+        try
         {
-            int idOsoba = Convert.ToInt32(Session["lbl_loginID"]);
-            int IDTerminPredavanja = 0;
-            int IDLokacija = Convert.ToInt32(Session["login-IDLokacija"]);
-            int IDLogPredavanja = 0;
-            List<int> predmetiList = new List<int>();
-            TimeSpan d1 = new TimeSpan();
-            utility.getTerminPredavanjaKraj(idOsoba, IDLokacija, out IDTerminPredavanja, out IDLogPredavanja, out predmetiList, out d1);
-            log.Debug("Check in table TerminPredavanja if Kraj is null. IDTerminPredavanja - " + IDTerminPredavanja + " IDLokacija - " + IDLokacija + " IDLogPredavanja - " + IDLogPredavanja + " predmetiList.Count - " + predmetiList.Count + " Pocetak - " + d1);
+            string encryptedParameters = Request.QueryString["d"];
+            log.Debug("encryptedParameters on Index page - " + encryptedParameters);
 
-            lblstranicanaziv.Text = utility.getImeLokacije(Convert.ToInt32(Session["login-IDLokacija"]));
-            log.Debug("Location name - " + lblstranicanaziv.Text);
-
-            if (IDTerminPredavanja != 0)
+            if ((encryptedParameters != string.Empty) && (encryptedParameters != null))
             {
-                List<int> idTerminiPredavanja = new List<int>();
-                utility.getIDTerminePredavanja(IDTerminPredavanja, out idTerminiPredavanja);
-                log.Debug("IDTerminiPredavanja.Count - " + idTerminiPredavanja.Count);
-                Session["Predavanja-idPonovnogPredavanja"] = idTerminiPredavanja;
-                //Session["Predavanja-idTerminPonovnogPredavanja"] = IDTerminPredavanja;
-                Session["Predavanje_idTerminPredavanja"] = IDTerminPredavanja;
-                Session["Predavanje_idLokacija"] = IDLokacija;
+                // replace encoded plus sign "%2b" with real plus sign +
+                encryptedParameters = encryptedParameters.Replace("%2b", "+");
 
-                Session["Predavanja_VremeZapocinjanja"] = d1;
+                string decryptedParameters = AuthenticatedEncryption.AuthenticatedEncryption.Decrypt(encryptedParameters, Constants.CryptKey, Constants.AuthKey);
 
-                List<string> predmetiNaziv = new List<string>();
-                predmetiNaziv = getPredmetiNaziv(utility, predmetiList, idOsoba);
-                Session["Predavanja_predmetiNazivi"] = predmetiNaziv;
-
-                string tipPredavanja = utility.getTipPredavanja(idOsoba, IDTerminPredavanja, IDLokacija, IDLogPredavanja);
-                Session["Predavanje_tipPredavanja"] = tipPredavanja;
-
-                Response.Redirect("predavanje.aspx", false);
-            }
-            else {
-                
-                if (Session["login_Ime"] != null && Session["lbl_loginID"] != null)
+                if (decryptedParameters == null)
                 {
-                    lbl_Ime.Text = Session["login_Ime"].ToString();
-
-                    HideDatepicker();
+                    throw new Exception("decryptedParameters error. ");
                 }
-                else
+
+                HttpRequest req = new HttpRequest("", "http://www.pis.rs", decryptedParameters);
+
+                string data = req.QueryString["IDTerminPredavanja"];
+
+                if (data == "0")
                 {
-                    int IDLokacija1 = Convert.ToInt32(Session["login-IDLokacija"]);
-                    string location = @"idLokacija=" + IDLokacija1;
-                    string encryptedParameters = AuthenticatedEncryption.AuthenticatedEncryption.Encrypt(location, Constants.CryptKey, Constants.AuthKey);
-                    encryptedParameters = encryptedParameters.Replace("+", "%252b");
-                    log.Debug("encryptedParameters, when trying to logout is - " + encryptedParameters);
-                    Response.Redirect(string.Format("~/login.aspx?d={0}", encryptedParameters), false);
+                    ChangeButtonVisibility(true);
+                    Session["Predavanje_idTerminPredavanjaIzmena"] = data;
+                    log.Debug("Predavanje_idTerminPredavanjaIzmena is - " + data);
+                }
+                else {
+                    ChangeButtonVisibility(false);
+                    Session["Predavanje_idTerminPredavanjaIzmena"] = data;
+                }
+
+                if (!Page.IsPostBack)
+                {
+                    if (Convert.ToInt32(Session["Predavanje_idTerminPredavanjaIzmena"]) == 0)
+                    {
+                        int idOsoba = Convert.ToInt32(Session["lbl_loginID"]);
+                        int IDTerminPredavanja = 0;
+                        int IDLokacija = Convert.ToInt32(Session["login-IDLokacija"]);
+                        int IDLogPredavanja = 0;
+                        List<int> predmetiList = new List<int>();
+                        TimeSpan d1 = new TimeSpan();
+                        utility.getTerminPredavanjaKraj(idOsoba, IDLokacija, out IDTerminPredavanja, out IDLogPredavanja, out predmetiList, out d1);
+                        log.Debug("Check in table TerminPredavanja if Kraj is null. IDTerminPredavanja - " + IDTerminPredavanja + " IDLokacija - " + IDLokacija + " IDLogPredavanja - " + IDLogPredavanja + " predmetiList.Count - " + predmetiList.Count + " Pocetak - " + d1);
+
+                        lblstranicanaziv.Text = utility.getImeLokacije(Convert.ToInt32(Session["login-IDLokacija"]));
+                        log.Debug("Location name - " + lblstranicanaziv.Text);
+
+                        if (IDTerminPredavanja != 0)
+                        {
+                            List<int> idTerminiPredavanja = new List<int>();
+                            utility.getIDTerminePredavanja(IDTerminPredavanja, out idTerminiPredavanja);
+                            log.Debug("IDTerminiPredavanja.Count - " + idTerminiPredavanja.Count);
+                            Session["Predavanja-idPonovnogPredavanja"] = idTerminiPredavanja;
+                            //Session["Predavanja-idTerminPonovnogPredavanja"] = IDTerminPredavanja;
+                            Session["Predavanje_idTerminPredavanja"] = IDTerminPredavanja;
+                            Session["Predavanje_idLokacija"] = IDLokacija;
+
+                            Session["Predavanja_VremeZapocinjanja"] = d1;
+
+                            List<string> predmetiNaziv = new List<string>();
+                            predmetiNaziv = getPredmetiNaziv(utility, predmetiList, idOsoba);
+                            Session["Predavanja_predmetiNazivi"] = predmetiNaziv;
+
+                            string tipPredavanja = utility.getTipPredavanja(idOsoba, IDTerminPredavanja, IDLokacija, IDLogPredavanja);
+                            Session["Predavanje_tipPredavanja"] = tipPredavanja;
+
+                            Response.Redirect("predavanje.aspx", false);
+                        }
+                        else
+                        {
+
+                            if (Session["login_Ime"] != null && Session["lbl_loginID"] != null)
+                            {
+                                lbl_Ime.Text = Session["login_Ime"].ToString();
+
+                                HideDatepicker();
+                            }
+                            else
+                            {
+                                int IDLokacija1 = Convert.ToInt32(Session["login-IDLokacija"]);
+                                string location = @"idLokacija=" + IDLokacija1;
+                                string encryptedParameters2 = AuthenticatedEncryption.AuthenticatedEncryption.Encrypt(location, Constants.CryptKey, Constants.AuthKey);
+                                encryptedParameters2 = encryptedParameters2.Replace("+", "%252b");
+                                log.Debug("encryptedParameters, when trying to logout is - " + encryptedParameters2);
+                                Response.Redirect(string.Format("~/login.aspx?d={0}", encryptedParameters2), false);
+                            }
+                        }
+                    }
+                    else
+                    {
+                        if (Session["login_Ime"] != null && Session["lbl_loginID"] != null)
+                        {
+                            lbl_Ime.Text = Session["login_Ime"].ToString();
+
+                            HideDatepicker();
+                        }
+                        else
+                        {
+                            int IDLokacija1 = Convert.ToInt32(Session["login-IDLokacija"]);
+                            string location = @"idLokacija=" + IDLokacija1;
+                            string encryptedParameters2 = AuthenticatedEncryption.AuthenticatedEncryption.Encrypt(location, Constants.CryptKey, Constants.AuthKey);
+                            encryptedParameters2 = encryptedParameters2.Replace("+", "%252b");
+                            log.Debug("encryptedParameters, when trying to logout is - " + encryptedParameters2);
+                            Response.Redirect(string.Format("~/login.aspx?d={0}", encryptedParameters2), false);
+                        }
+                    }
                 }
             }
-        }      
+        }
+        catch (Exception ex)
+        {
+            Response.Redirect("GreskaTerminPredavanja.aspx", false);
+            log.Error("Error. " + ex);
+        }     
+    }
+
+    protected void ChangeButtonVisibility(bool isVisible)
+    {
+        buttonStartVisible.Visible = isVisible;
+        buttonEditVisible.Visible = !isVisible;
     }
 
     public List<string> getPredmetiNaziv(Utility utility, List<int> predmetiList, int idOsoba)
@@ -258,10 +325,6 @@ public partial class index : System.Web.UI.Page
 
                 Session["Predavanje_spanIzborKonacno.Text"] = ddlizbor.SelectedItem.Text;
 
-                /*
-                TimeSpan trimmedSpan1;
-                TimeSpanNow(out trimmedSpan1);
-                */
                 int IDPredavanje = 0;
                 int IDTerminPredavanja = 0;
                 
@@ -281,9 +344,6 @@ public partial class index : System.Web.UI.Page
                 if (Result == 1)
                 {
                     ScriptManager.RegisterStartupScript(this, GetType(), "erroralerttermin", "erroralertTermin();", true);
-                    //ShowHideDiv(true);
-                    //GridView1.DataBind();
-                    //btnLogout.Enabled = false;
                     HideDatepicker();
                     log.Debug("Greška prilikom unosa termina. Morate završiti predavanje koje je u toku. (Zatvorena stranica)");
                 }
@@ -316,10 +376,7 @@ public partial class index : System.Web.UI.Page
                     }
                     else
                     {
-                        //btnLogout.Enabled = false;
                         Session["Predavanja-IDPredavanjeList"] = IDPredavanjeList;
-                        //ShowHideDiv(true);
-                        //GridView1.DataBind();
                         Response.Redirect("predavanje.aspx", false);
                     }
                 }
@@ -498,6 +555,81 @@ public partial class index : System.Web.UI.Page
         catch (InvalidCastException inEx)
         {
             log.Error("Problem with setting focus on control. Error: " + inEx);
+        }
+    }
+
+    protected void btnEdit_Click(object sender, EventArgs e)
+    {
+        int Result = 0;
+        int IDTerminPredavanjeIzmena = Convert.ToInt32(Session["Predavanje_idTerminPredavanjaIzmena"]);
+        try
+        {
+            Utility utility = new Utility();
+
+            utility.brisanjePredavanjaIzTermina(IDTerminPredavanjeIzmena, out Result);
+            log.Debug("brisanjePredavanjaIzTermina: " + " IDTerminPredavanjeIzmena - " + IDTerminPredavanjeIzmena + " " + ". Rezultat - " + Result);
+
+            if (Result != 0)
+            {
+                throw new Exception("Result from database is diferent from 0. Result is: " + Result);
+            }
+            else
+            {
+                Page.Validate("AddCustomValidatorToGroup");
+
+                if (Page.IsValid)
+                {
+                    int IDLokacija = Convert.ToInt32(Session["login-IDLokacija"]);
+
+                    TimeSpan d1 = utility.getPocetakTermina(IDTerminPredavanjeIzmena);
+                    Session["Predavanja_VremeZapocinjanja"] = d1;
+
+                    int IDPredavanje = 0;
+
+                    increasePredmetiList();
+
+                    Session["Predavanje_spanIzborKonacno.Text"] = ddlizbor.SelectedItem.Text;
+
+                    string FinalDate = string.Empty;
+                    string FormatDateTime = "dd.mm.yyyy";
+                    string FormatToString = "yyyy-mm-dd";
+                    parceDateTime(Session["Predavanja_txtdate"].ToString(), FormatDateTime, FormatToString, out FinalDate);
+
+                    // Create the list to store Object Predavanje.
+                    List<Predavanje> IDPredavanjeList = new List<Predavanje>();
+
+                    foreach (ListItem item in CheckBoxList1.Items)
+                    {
+                        if (item.Selected)
+                        {
+                            utility.zapocinjanjePredavanja(Convert.ToInt32(Session["Predavanje_idTerminPredavanjaIzmena"]), Convert.ToInt32(item.Value), Convert.ToInt32(ddlizbor.SelectedValue), out IDPredavanje, out Result);
+                            log.Debug("Upisivanje predavanja nakon izmene: " + " IDTerminPredavanja - " + Convert.ToInt32(Session["Predavanje_idTerminPredavanjaIzmena"]) + " " + ". idPredmet - " + item.Value + " " + ". idTipPredavanja - " + ddlizbor.SelectedValue + " " + ". idPredavanje - " + IDPredavanje + " " + ". Rezultat - " + Result);  
+                            IDPredavanjeList.Add(new Predavanje(IDPredavanje, Convert.ToInt32(item.Value)));
+                        }
+                    }
+
+                    if (Result != 0)
+                    {
+                        throw new Exception("Result from database is diferent from 0. Result is: " + Result);
+                    }
+                    else
+                    {
+                        Session["Predavanja-IDPredavanjeList"] = IDPredavanjeList;
+                        Response.Redirect("predavanje.aspx", false);
+                    }
+                }
+                else if (!Page.IsValid)
+                {
+                    ScriptManager.RegisterStartupScript(this, GetType(), "erroralert", "erroralert();", true);
+                    HideDatepicker();
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            ScriptManager.RegisterStartupScript(this, GetType(), "erroralert", "erroralert();", true);
+            log.Error("Button submit error. " + ex.Message);
+            HideDatepicker();
         }
     }
 }

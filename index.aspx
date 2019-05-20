@@ -151,12 +151,22 @@
                     </asp:UpdatePanel>
                     <!--section search start-->
                     <section class="search-section py-1 py-md-2">
-                        <div class="row">
+                        <div id="buttonStartVisible" class="row" runat="server">
                             <!--div search start-->
                             <div class="col-12 col-md-4 mb-1">
                             </div>
                             <div class="col-12 col-md-4 mb-1 mb-4 text-center">
                                 <asp:Button ID="btnStart" runat="server" Text=">>>Započni predavanje<<<" CssClass="btn btn-info" OnClick="btnStart_Click" OnClientClick="unhook()" TabIndex="9"/>
+                            </div>
+                            <div class="col-12 col-md-4 mb-1">
+                            </div><!--div search end-->
+                        </div>
+                        <div id="buttonEditVisible" class="row" runat="server">
+                            <!--div search start-->
+                            <div class="col-12 col-md-4 mb-1">
+                            </div>
+                            <div class="col-12 col-md-4 mb-1 mb-4 text-center">
+                                <asp:Button ID="btnEdit" runat="server" Text=">>>Izmeni predavanje<<<" CssClass="btn btn-warning" OnClick="btnEdit_Click" OnClientClick="unhook()" TabIndex="10"/>
                             </div>
                             <div class="col-12 col-md-4 mb-1">
                             </div><!--div search end-->

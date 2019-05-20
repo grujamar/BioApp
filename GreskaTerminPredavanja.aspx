@@ -1,6 +1,4 @@
-﻿<%@ Page Language="C#" AutoEventWireup="true" CodeFile="GreskaBaza.aspx.cs" Inherits="GreskaBaza" %>
-
-<!DOCTYPE html>
+﻿<%@ Page Language="C#" AutoEventWireup="true" CodeFile="GreskaTerminPredavanja.aspx.cs" Inherits="GreskaTerminPredavanja" %>
 
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head runat="server">
@@ -34,7 +32,7 @@
             <section class="lead-section my-4">
                 <div class="container">
                     <asp:Label id="lblstranicanaziv" runat="server" CssClass="page-name">
-                        Greška prilikom dobijanja IDLokacije. Pokušajte kasnije!
+                        Greška prilikom dobijanja IDTerminaPredavanja. Pokušajte kasnije!
                     </asp:Label>
                 </div>
             </section><!--lead-section end-->
@@ -56,3 +54,4 @@
     </form>
 </body>
 </html>
+

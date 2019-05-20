@@ -82,7 +82,7 @@ public partial class login : System.Web.UI.Page
         catch (Exception ex)
         {
             Response.Redirect("GreskaLokacija.aspx", false);
-            log.Error("Error. IDLokacija is: " + ex);
+            log.Error("Error. " + ex);
         }
     }
 
@@ -119,7 +119,22 @@ public partial class login : System.Web.UI.Page
                     Session["lbl_loginID"] = IDOsoba;
                     Session["login_IDLogPredavanja"] = IDLogPredavanja;
 
-                    Response.Redirect("index.aspx", false); // this will tell .NET framework not to stop the execution of the current thread and hence the error will be resolved.
+                    string PageToRedirect = "index.aspx";
+                    int idTerminPredavanjaIzmena = 0;
+                    try
+                    {
+                        string idTerminPredavanjaIzmena1 = @"IDTerminPredavanja=" + idTerminPredavanjaIzmena;
+                        log.Debug("idTerminPredavanjaIzmena is - " + idTerminPredavanjaIzmena1);
+                        string editParameters = AuthenticatedEncryption.AuthenticatedEncryption.Encrypt(idTerminPredavanjaIzmena1, Constants.CryptKey, Constants.AuthKey);
+                        editParameters = editParameters.Replace("+", "%252b");
+                        log.Debug("Page to redirect. editParameters is - " + editParameters);
+                        Response.Redirect(string.Format("~/" + PageToRedirect + "?d={0}", editParameters), false);
+                    }
+                    catch (Exception ex)
+                    {
+                        log.Debug("Error while opening the Page: " + PageToRedirect + " . Error message: " + ex.Message);
+                        throw new Exception("Error while opening the Page: " + PageToRedirect + " . Error message: " + ex.Message);
+                    }
                 }
             }
             else if (!Page.IsValid)

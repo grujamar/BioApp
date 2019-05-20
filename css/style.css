@@ -7,10 +7,28 @@ html{
     margin-right: 5px;
 }
 
+.img-holder {
+    position: relative;
+    background: #ccc url('../images/nophoto.jpg') no-repeat center center;
+    background-size: 50px auto;
+    overflow: hidden;
+    display: block;
+}
+
+.img-holder:after {
+    content: '';
+    display: block;
+    width: 100%;
+}
+
+.img-holder.size-gridImage:after {
+    padding-top: 81.25%;
+}
+
 /*HEADER START*/
 .navbar-container .logo-image {
-    height: 70px;
-    margin-top: 4px;
+height: 70px;
+margin-top: 4px;
 }
 
 .navbar-container .scns-name {

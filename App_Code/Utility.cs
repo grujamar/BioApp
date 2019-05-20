@@ -576,6 +576,71 @@ WHERE        (IDLokacija = @idlokacije)";
             throw new Exception("Error in function upisivanjePrisustvaRucno. " + ex.Message);
         }
     }
+
+
+    public void brisanjePredavanjaIzTermina(int IDTerminPredavanja, out int result)
+    {
+        try
+        {
+            SqlConnection objConn = new SqlConnection(bioconnectionstring);
+            SqlCommand objCmd = new SqlCommand("spBrisanjePredavanjaIzTermina", objConn);
+            objCmd.CommandType = CommandType.StoredProcedure;
+
+            objCmd.Parameters.Add("@idTerminPredavanja", System.Data.SqlDbType.Int).Value = IDTerminPredavanja;
+
+            objCmd.Parameters.Add("@err", System.Data.SqlDbType.Int);
+            objCmd.Parameters["@err"].Direction = ParameterDirection.ReturnValue;
+
+            objConn.Open();
+            objCmd.ExecuteNonQuery();
+
+            //Retrieve the values of the output parameters
+            result = Convert.ToInt32(objCmd.Parameters["@err"].Value);
+
+            objConn.Close();
+        }
+        catch (Exception ex)
+        {
+            log.Error("Error in function brisanjePredavanjaIzTermina. " + ex.Message);
+            throw new Exception("Error in function brisanjePredavanjaIzTermina. " + ex.Message);
+        }
+    }
+
+
+
+    public TimeSpan getPocetakTermina(int IdTerminPredavanja)
+    {
+        TimeSpan Pocetak = DateTime.Now.TimeOfDay;
+
+        string upit = @"SELECT        Pocetak AS Expr1
+                        FROM            dbo.TerminPredavanja
+                        WHERE        (IDTerminPredavanja = @idterminpredavanja)";
+
+        using (SqlConnection objConn = new SqlConnection(bioconnectionstring))
+        {
+            using (SqlCommand objCmd = new SqlCommand(upit, objConn))
+            {
+                try
+                {
+                    objCmd.CommandType = System.Data.CommandType.Text;
+                    objCmd.Parameters.Add("@idterminpredavanja", System.Data.SqlDbType.Int).Value = IdTerminPredavanja;
+                    objConn.Open();
+                    SqlDataReader reader = objCmd.ExecuteReader();
+                    if (reader.Read())
+                    {
+                        Pocetak = reader.GetTimeSpan(0);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    log.Error("Error while getting Pocetak in function getPocetakTermina. " + ex.Message);
+                    throw new Exception("Error while getting Pocetak in function getPocetakTermina. " + ex.Message);
+                }
+            }
+        }
+
+        return Pocetak;
+    }
     /*
     public void upisiOrganizaciju(string organizacija)
     {

@@ -193,9 +193,22 @@ public partial class predavanje : System.Web.UI.Page
             else
             {
                 btnLogout.Enabled = true;
-                Response.Redirect("index.aspx", false); // this will tell .NET framework not to stop the execution of the current thread and hence the error will be resolved.
-                                                        //ShowHideDiv(false);
-                                                        //HideDatepicker();
+                string PageToRedirect = "index.aspx";
+                int idTerminPredavanjaIzmena = 0;
+                try
+                {
+                    string idTerminPredavanjaIzmena1 = @"IDTerminPredavanja=" + idTerminPredavanjaIzmena;
+                    log.Debug("idTerminPredavanjaIzmena is - " + idTerminPredavanjaIzmena1);
+                    string editParameters = AuthenticatedEncryption.AuthenticatedEncryption.Encrypt(idTerminPredavanjaIzmena1, Constants.CryptKey, Constants.AuthKey);
+                    editParameters = editParameters.Replace("+", "%252b");
+                    log.Debug("Page to redirect. editParameters is - " + editParameters);
+                    Response.Redirect(string.Format("~/" + PageToRedirect + "?d={0}", editParameters), false);
+                }
+                catch (Exception ex)
+                {
+                    log.Debug("Error while opening the Page: " + PageToRedirect + " . Error message: " + ex.Message);
+                    throw new Exception("Error while opening the Page: " + PageToRedirect + " . Error message: " + ex.Message);
+                }
             }
         }
         catch (Exception ex)
@@ -372,4 +385,25 @@ public partial class predavanje : System.Web.UI.Page
             args.IsValid = false;
         }
     }
+
+    protected void btnEdit_Click(object sender, EventArgs e)
+    {
+        string PageToRedirect = "index.aspx";
+        int idTerminPredavanjaIzmena = Convert.ToInt32(Session["Predavanje_idTerminPredavanja"]);
+        try
+        {
+            string idTerminPredavanjaIzmena1 = @"IDTerminPredavanja=" + idTerminPredavanjaIzmena;
+            log.Debug("Edit predavanje started. idTerminPredavanjaIzmena is - " + idTerminPredavanjaIzmena1);
+            string editParameters = AuthenticatedEncryption.AuthenticatedEncryption.Encrypt(idTerminPredavanjaIzmena1, Constants.CryptKey, Constants.AuthKey);
+            editParameters = editParameters.Replace("+", "%252b");
+            log.Debug("Page to redirect. editParameters is - " + editParameters);
+            Response.Redirect(string.Format("~/" + PageToRedirect + "?d={0}", editParameters), false);
+        }
+        catch (Exception ex)
+        {
+            log.Debug("Error while opening the Page: " + PageToRedirect + " . Error message: " + ex.Message);
+            ScriptManager.RegisterStartupScript(this, GetType(), "errorOpeningPage", "errorOpeningPage();", true);
+        }
+    }
+
 }

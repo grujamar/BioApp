@@ -39,6 +39,13 @@
         function unhook() {
             new_var = false;
         }
+        function errorOpeningPage() {
+            swal({
+                title: 'Greška prilikom otvaranja stranice.',
+                text: 'Pokušajte ponovo kasnije.',
+                type: 'OK'
+            });
+        }
     </script>
 </head>
 <body class="login-bg">
@@ -94,7 +101,8 @@
                                 </ContentTemplate>
                             </asp:UpdatePanel>
                             <div class="col-12 col-md-3 mb-1 ml-auto py-2">
-                                <asp:Button ID="btnEnd" runat="server" Text="Završi predavanje" CssClass="btn btn-danger btn-lg px-5" OnClick="btnEnd_Click" OnClientClick="unhook()" TabIndex="10"/> 
+                                <asp:Button ID="btnEnd" runat="server" Text="Završi predavanje" CssClass="btn btn-danger btn-lg px-5" OnClick="btnEnd_Click" OnClientClick="unhook()" TabIndex="10"/>
+                                <asp:Button ID="btnEdit" runat="server" Text="Izmeni predavanje" CssClass="btn btn-warning px-2 mt-5" OnClick="btnEdit_Click" OnClientClick="unhook()" TabIndex="12"/>
                             </div>
                         </div>
                         <div class="row mt-0">
@@ -152,9 +160,9 @@
                                                                 <asp:TextBox ID="TextBox1" runat="server" Text='<%# Bind("BrojSlike") %>'></asp:TextBox>
                                                             </EditItemTemplate>
                                                             <ItemTemplate>
-                                                                <asp:Image ID="Image1" class="gridImages" runat="server" Height="64px"
+                                                                <asp:Image ID="Image1" class="img-holder size-gridImage gridImages" runat="server" Height="64px"
                                                                     ImageUrl='<%# System.Configuration.ConfigurationManager.AppSettings["FotografijeFolder"] + Eval("BrojSlike") + ".jpg" %>' 
-                                                                    Width="52px" AlternateText='nije pronađeno'/>
+                                                                    Width="52px"/>
                                                                     <div id="tooltip" style="display: none;">
                                                                     <table>
                                                                     <tr>

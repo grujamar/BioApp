@@ -145,7 +145,7 @@ public static class Utils
         }
         else if (SelectedValue == 2)
         {
-            if (brojAkreditacijeList[0] != brojAkreditacijeList[1])
+            if (brojAkreditacijeList[0] == brojAkreditacijeList[1])
             {
                 ErrorMessage = "Ne možete izabrati dva predmeta sa istom akreditacijom.";
                 returnValue = false;
