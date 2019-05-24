@@ -24,252 +24,282 @@ public class Utility
 
     public bool IsAvailableConnection()
     {
-        try
+        using (SqlConnection objConn = new SqlConnection(bioconnectionstring))
         {
-            SqlConnection objConn = new SqlConnection(bioconnectionstring);
-            objConn.Open();
-            objConn.Close();
+            try
+            {
+                objConn.Open();
+                objConn.Close();
+            }
+            catch (SqlException ex)
+            {
+                log.Error("Error while connecting to Database. " + ex.Message);
+                return false;
+            }
+            return true;
         }
-        catch (SqlException ex)
-        {
-            log.Error("Error while connecting to Database. " + ex.Message);
-            return false;
-        }
-        return true;
     }
 
     public void loginPredavanja(string Username, int IDLokacija, out int idLogPredavanja, out int idOsoba, out string Ime, out int result)
     {
-        try
+        using (SqlConnection objConn = new SqlConnection(bioconnectionstring))
         {
-            SqlConnection objConn = new SqlConnection(bioconnectionstring);
-            SqlCommand objCmd = new SqlCommand("spLoginPredavanja", objConn);
-            objCmd.CommandType = CommandType.StoredProcedure;
+            using (SqlCommand objCmd = new SqlCommand("spLoginPredavanja", objConn))
+            {
+                try
+                {
+                    objCmd.CommandType = CommandType.StoredProcedure;
 
-            objCmd.Parameters.AddWithValue("@username", Username);
-            objCmd.Parameters.Add("@IDLokacija", System.Data.SqlDbType.Int).Value = IDLokacija;
+                    objCmd.Parameters.AddWithValue("@username", Username);
+                    objCmd.Parameters.Add("@IDLokacija", System.Data.SqlDbType.Int).Value = IDLokacija;
 
-            /*OUTPUT PARAMETERS*/
-            objCmd.Parameters.Add("@IDLogPredavanja", System.Data.SqlDbType.Int);
-            objCmd.Parameters["@IDLogPredavanja"].Direction = System.Data.ParameterDirection.Output;
+                    /*OUTPUT PARAMETERS*/
+                    objCmd.Parameters.Add("@IDLogPredavanja", System.Data.SqlDbType.Int);
+                    objCmd.Parameters["@IDLogPredavanja"].Direction = System.Data.ParameterDirection.Output;
 
-            objCmd.Parameters.Add("@IDOsoba", System.Data.SqlDbType.Int);
-            objCmd.Parameters["@IDOsoba"].Direction = System.Data.ParameterDirection.Output;
+                    objCmd.Parameters.Add("@IDOsoba", System.Data.SqlDbType.Int);
+                    objCmd.Parameters["@IDOsoba"].Direction = System.Data.ParameterDirection.Output;
 
-            objCmd.Parameters.Add("@PunoIme", System.Data.SqlDbType.NVarChar, -1);
-            objCmd.Parameters["@PunoIme"].Direction = System.Data.ParameterDirection.Output;
+                    objCmd.Parameters.Add("@PunoIme", System.Data.SqlDbType.NVarChar, -1);
+                    objCmd.Parameters["@PunoIme"].Direction = System.Data.ParameterDirection.Output;
 
-            objCmd.Parameters.Add("@err", System.Data.SqlDbType.Int);
-            objCmd.Parameters["@err"].Direction = ParameterDirection.ReturnValue;
+                    objCmd.Parameters.Add("@err", System.Data.SqlDbType.Int);
+                    objCmd.Parameters["@err"].Direction = ParameterDirection.ReturnValue;
 
-            objConn.Open();
-            objCmd.ExecuteNonQuery();
+                    objConn.Open();
+                    objCmd.ExecuteNonQuery();
 
-            //Retrieve the values of the output parameters
-            idLogPredavanja = Convert.ToInt32(objCmd.Parameters["@IDLogPredavanja"].Value);
-            idOsoba = Convert.ToInt32(objCmd.Parameters["@IDOsoba"].Value);
-            Ime = objCmd.Parameters["@PunoIme"].Value.ToString();
-            result = Convert.ToInt32(objCmd.Parameters["@err"].Value);
+                    //Retrieve the values of the output parameters
+                    idLogPredavanja = Convert.ToInt32(objCmd.Parameters["@IDLogPredavanja"].Value);
+                    idOsoba = Convert.ToInt32(objCmd.Parameters["@IDOsoba"].Value);
+                    Ime = objCmd.Parameters["@PunoIme"].Value.ToString();
+                    result = Convert.ToInt32(objCmd.Parameters["@err"].Value);
 
-            objConn.Close();
-        }
-        catch (Exception ex)
-        {
-            log.Error("Error in function loginPredavanja. " + ex.Message);
-            throw new Exception("Error in function loginPredavanja. " + ex.Message);
+                    objConn.Close();
+                }
+                catch (Exception ex)
+                {
+                    log.Error("Error in function loginPredavanja. " + ex.Message);
+                    throw new Exception("Error in function loginPredavanja. " + ex.Message);
+                }
+            }
         }
     }
 
     public void logoutPredavanja(int idLogPredavanja, out int result)
     {
-        try
+        using (SqlConnection objConn = new SqlConnection(bioconnectionstring))
         {
-            SqlConnection objConn = new SqlConnection(bioconnectionstring);
-            SqlCommand objCmd = new SqlCommand("spLogoutPredavanja", objConn);
-            objCmd.CommandType = CommandType.StoredProcedure;
+            using (SqlCommand objCmd = new SqlCommand("spLogoutPredavanja", objConn))
+            {
+                try
+                {
+                    objCmd.CommandType = CommandType.StoredProcedure;
 
-            objCmd.Parameters.Add("@idLogPredavanja", System.Data.SqlDbType.Int).Value = idLogPredavanja;
+                    objCmd.Parameters.Add("@idLogPredavanja", System.Data.SqlDbType.Int).Value = idLogPredavanja;
 
-            objCmd.Parameters.Add("@err", System.Data.SqlDbType.Int);
-            objCmd.Parameters["@err"].Direction = ParameterDirection.ReturnValue;
+                    objCmd.Parameters.Add("@err", System.Data.SqlDbType.Int);
+                    objCmd.Parameters["@err"].Direction = ParameterDirection.ReturnValue;
 
-            objConn.Open();
-            objCmd.ExecuteNonQuery();
+                    objConn.Open();
+                    objCmd.ExecuteNonQuery();
 
-            result = Convert.ToInt32(objCmd.Parameters["@err"].Value);
+                    result = Convert.ToInt32(objCmd.Parameters["@err"].Value);
 
-            objConn.Close();
-        }
-        catch (Exception ex)
-        {
-            log.Error("Error in function logoutPredavanja. " + ex.Message);
-            throw new Exception("Error in function logoutPredavanja. " + ex.Message);
+                    objConn.Close();
+                }
+                catch (Exception ex)
+                {
+                    log.Error("Error in function logoutPredavanja. " + ex.Message);
+                    throw new Exception("Error in function logoutPredavanja. " + ex.Message);
+                }
+            }
         }
     }
 
     public void zapocinjanjeTermina(int IDLokacija, DateTime Datum, TimeSpan Pocetak, int idOsoba, int idLogPredavanja, out int idTerminPredavanja, out int result)
     {
-        try
+        using (SqlConnection objConn = new SqlConnection(bioconnectionstring))
         {
-            SqlConnection objConn = new SqlConnection(bioconnectionstring);
-            SqlCommand objCmd = new SqlCommand("spZapocinjanjeTermina", objConn);
-            objCmd.CommandType = CommandType.StoredProcedure;
+            using (SqlCommand objCmd = new SqlCommand("spZapocinjanjeTermina", objConn))
+            {
+                try
+                {
+                    objCmd.CommandType = CommandType.StoredProcedure;
 
-            objCmd.Parameters.Add("@IDLokacija", System.Data.SqlDbType.Int).Value = IDLokacija;
-            objCmd.Parameters.AddWithValue("@Datum", Datum);
-            objCmd.Parameters.AddWithValue("@pocetak", Pocetak);
-            objCmd.Parameters.Add("@idOsoba", System.Data.SqlDbType.Int).Value = idOsoba;
-            objCmd.Parameters.Add("@idLogPredavanja", System.Data.SqlDbType.Int).Value = idLogPredavanja;
+                    objCmd.Parameters.Add("@IDLokacija", System.Data.SqlDbType.Int).Value = IDLokacija;
+                    objCmd.Parameters.AddWithValue("@Datum", Datum);
+                    objCmd.Parameters.AddWithValue("@pocetak", Pocetak);
+                    objCmd.Parameters.Add("@idOsoba", System.Data.SqlDbType.Int).Value = idOsoba;
+                    objCmd.Parameters.Add("@idLogPredavanja", System.Data.SqlDbType.Int).Value = idLogPredavanja;
 
-            //Add the output parameter to the command object
-            SqlParameter outPutParameter = new SqlParameter();
-            outPutParameter.ParameterName = "@idTerminPredavanja";
-            outPutParameter.SqlDbType = System.Data.SqlDbType.Int;
-            outPutParameter.Direction = System.Data.ParameterDirection.Output;
-            objCmd.Parameters.Add(outPutParameter);
+                    //Add the output parameter to the command object
+                    SqlParameter outPutParameter = new SqlParameter();
+                    outPutParameter.ParameterName = "@idTerminPredavanja";
+                    outPutParameter.SqlDbType = System.Data.SqlDbType.Int;
+                    outPutParameter.Direction = System.Data.ParameterDirection.Output;
+                    objCmd.Parameters.Add(outPutParameter);
 
-            objCmd.Parameters.Add("@err", System.Data.SqlDbType.Int);
-            objCmd.Parameters["@err"].Direction = ParameterDirection.ReturnValue;
+                    objCmd.Parameters.Add("@err", System.Data.SqlDbType.Int);
+                    objCmd.Parameters["@err"].Direction = ParameterDirection.ReturnValue;
 
-            objConn.Open();
-            objCmd.ExecuteNonQuery();
+                    objConn.Open();
+                    objCmd.ExecuteNonQuery();
 
-            //Retrieve the value of the output parameter
-            idTerminPredavanja = Convert.ToInt32(outPutParameter.Value);
-            result = Convert.ToInt32(objCmd.Parameters["@err"].Value);
+                    //Retrieve the value of the output parameter
+                    idTerminPredavanja = Convert.ToInt32(outPutParameter.Value);
+                    result = Convert.ToInt32(objCmd.Parameters["@err"].Value);
 
-            objConn.Close();
-        }
-        catch (Exception ex)
-        {
-            log.Error("Error in function zapocinjanjeTermina. " + ex.Message);
-            throw new Exception("Error in function zapocinjanjeTermina. " + ex.Message);
+                    objConn.Close();
+                }
+                catch (Exception ex)
+                {
+                    log.Error("Error in function zapocinjanjeTermina. " + ex.Message);
+                    throw new Exception("Error in function zapocinjanjeTermina. " + ex.Message);
+                }
+            }
         }
     }
 
     public void zapocinjanjePredavanja(int IDTerminPredavanja, int idPredmet, int idTipPredavanja, out int idPredavanje, out int result)
     {
-        try
+        using (SqlConnection objConn = new SqlConnection(bioconnectionstring))
         {
-            SqlConnection objConn = new SqlConnection(bioconnectionstring);
-            SqlCommand objCmd = new SqlCommand("spZapocinjanjePredavanja", objConn);
-            objCmd.CommandType = CommandType.StoredProcedure;
+            using (SqlCommand objCmd = new SqlCommand("spZapocinjanjePredavanja", objConn))
+            {
+                try
+                {
+                    objCmd.CommandType = CommandType.StoredProcedure;
 
-            objCmd.Parameters.Add("@idTerminPredavanja", System.Data.SqlDbType.Int).Value = IDTerminPredavanja;
-            objCmd.Parameters.Add("@idPredmet", System.Data.SqlDbType.Int).Value = idPredmet;
-            objCmd.Parameters.Add("@idTipPredavanja", System.Data.SqlDbType.Int).Value = idTipPredavanja;
+                    objCmd.Parameters.Add("@idTerminPredavanja", System.Data.SqlDbType.Int).Value = IDTerminPredavanja;
+                    objCmd.Parameters.Add("@idPredmet", System.Data.SqlDbType.Int).Value = idPredmet;
+                    objCmd.Parameters.Add("@idTipPredavanja", System.Data.SqlDbType.Int).Value = idTipPredavanja;
 
-            //Add the output parameter to the command object
-            SqlParameter outPutParameter = new SqlParameter();
-            outPutParameter.ParameterName = "@idPredavanje";
-            outPutParameter.SqlDbType = System.Data.SqlDbType.Int;
-            outPutParameter.Direction = System.Data.ParameterDirection.Output;
-            objCmd.Parameters.Add(outPutParameter);
+                    //Add the output parameter to the command object
+                    SqlParameter outPutParameter = new SqlParameter();
+                    outPutParameter.ParameterName = "@idPredavanje";
+                    outPutParameter.SqlDbType = System.Data.SqlDbType.Int;
+                    outPutParameter.Direction = System.Data.ParameterDirection.Output;
+                    objCmd.Parameters.Add(outPutParameter);
 
-            objCmd.Parameters.Add("@err", System.Data.SqlDbType.Int);
-            objCmd.Parameters["@err"].Direction = ParameterDirection.ReturnValue;
+                    objCmd.Parameters.Add("@err", System.Data.SqlDbType.Int);
+                    objCmd.Parameters["@err"].Direction = ParameterDirection.ReturnValue;
 
-            objConn.Open();
-            objCmd.ExecuteNonQuery();
+                    objConn.Open();
+                    objCmd.ExecuteNonQuery();
 
-            //Retrieve the value of the output parameter
-            idPredavanje = Convert.ToInt32(outPutParameter.Value);
-            result = Convert.ToInt32(objCmd.Parameters["@err"].Value);
+                    //Retrieve the value of the output parameter
+                    idPredavanje = Convert.ToInt32(outPutParameter.Value);
+                    result = Convert.ToInt32(objCmd.Parameters["@err"].Value);
 
-            objConn.Close();
-        }
-        catch (Exception ex)
-        {
-            log.Error("Error in function zapocinjanjePredavanja. " + ex.Message);
-            throw new Exception("Error in function zapocinjanjePredavanja. " + ex.Message);
+                    objConn.Close();
+                }
+                catch (Exception ex)
+                {
+                    log.Error("Error in function zapocinjanjePredavanja. " + ex.Message);
+                    throw new Exception("Error in function zapocinjanjePredavanja. " + ex.Message);
+                }
+            }
         }
     }
 
     public void zavrsavanjePredavanja(int idPredavanje, TimeSpan Kraj, decimal procenatZaPriznavanje, out int result)
     {
-        try
+        using (SqlConnection objConn = new SqlConnection(bioconnectionstring))
         {
-            SqlConnection objConn = new SqlConnection(bioconnectionstring);
-            SqlCommand objCmd = new SqlCommand("spZavrsavanjePredavanja", objConn);
-            objCmd.CommandType = CommandType.StoredProcedure;
+            using (SqlCommand objCmd = new SqlCommand("spZavrsavanjePredavanja", objConn))
+            {
+                try
+                {
+                    objCmd.CommandType = CommandType.StoredProcedure;
 
-            objCmd.Parameters.Add("@idPredavanje", System.Data.SqlDbType.Int).Value = idPredavanje;
-            objCmd.Parameters.AddWithValue("@kraj", Kraj);
-            objCmd.Parameters.Add("@procenatZaPriznavanje", System.Data.SqlDbType.Decimal).Value = procenatZaPriznavanje;
+                    objCmd.Parameters.Add("@idPredavanje", System.Data.SqlDbType.Int).Value = idPredavanje;
+                    objCmd.Parameters.AddWithValue("@kraj", Kraj);
+                    objCmd.Parameters.Add("@procenatZaPriznavanje", System.Data.SqlDbType.Decimal).Value = procenatZaPriznavanje;
 
-            objCmd.Parameters.Add("@err", System.Data.SqlDbType.Int);
-            objCmd.Parameters["@err"].Direction = ParameterDirection.ReturnValue;
+                    objCmd.Parameters.Add("@err", System.Data.SqlDbType.Int);
+                    objCmd.Parameters["@err"].Direction = ParameterDirection.ReturnValue;
 
-            objConn.Open();
-            objCmd.ExecuteNonQuery();
+                    objConn.Open();
+                    objCmd.ExecuteNonQuery();
 
-            //Retrieve the value of the output parameter
-            result = Convert.ToInt32(objCmd.Parameters["@err"].Value);
+                    //Retrieve the value of the output parameter
+                    result = Convert.ToInt32(objCmd.Parameters["@err"].Value);
 
-            objConn.Close();
-        }
-        catch (Exception ex)
-        {
-            log.Error("Error in function zavrsavanjePredavanja. " + ex.Message);
-            throw new Exception("Error in function zavrsavanjePredavanja. " + ex.Message);
+                    objConn.Close();
+                }
+                catch (Exception ex)
+                {
+                    log.Error("Error in function zavrsavanjePredavanja. " + ex.Message);
+                    throw new Exception("Error in function zavrsavanjePredavanja. " + ex.Message);
+                }
+            }
         }
     }
 
 
     public void zavrsavanjeTermina(int idTerminPredavanja, TimeSpan Kraj, out int result)
     {
-        try
+        using (SqlConnection objConn = new SqlConnection(bioconnectionstring))
         {
-            SqlConnection objConn = new SqlConnection(bioconnectionstring);
-            SqlCommand objCmd = new SqlCommand("spZavrsavanjeTermina", objConn);
-            objCmd.CommandType = CommandType.StoredProcedure;
+            using (SqlCommand objCmd = new SqlCommand("spZavrsavanjeTermina", objConn))
+            {
+                try
+                {
+                    objCmd.CommandType = CommandType.StoredProcedure;
 
-            objCmd.Parameters.Add("@idTerminPredavanja", System.Data.SqlDbType.Int).Value = idTerminPredavanja;
-            objCmd.Parameters.AddWithValue("@kraj", Kraj);
+                    objCmd.Parameters.Add("@idTerminPredavanja", System.Data.SqlDbType.Int).Value = idTerminPredavanja;
+                    objCmd.Parameters.AddWithValue("@kraj", Kraj);
 
-            objCmd.Parameters.Add("@err", System.Data.SqlDbType.Int);
-            objCmd.Parameters["@err"].Direction = ParameterDirection.ReturnValue;
+                    objCmd.Parameters.Add("@err", System.Data.SqlDbType.Int);
+                    objCmd.Parameters["@err"].Direction = ParameterDirection.ReturnValue;
 
-            objConn.Open();
-            objCmd.ExecuteNonQuery();
+                    objConn.Open();
+                    objCmd.ExecuteNonQuery();
 
-            //Retrieve the value of the output parameter
-            result = Convert.ToInt32(objCmd.Parameters["@err"].Value);
+                    //Retrieve the value of the output parameter
+                    result = Convert.ToInt32(objCmd.Parameters["@err"].Value);
 
-            objConn.Close();
-        }
-        catch (Exception ex)
-        {
-            log.Error("Error in function zavrsavanjeTermina. " + ex.Message);
-            throw new Exception("Error in function zavrsavanjeTermina. " + ex.Message);
+                    objConn.Close();
+                }
+                catch (Exception ex)
+                {
+                    log.Error("Error in function zavrsavanjeTermina. " + ex.Message);
+                    throw new Exception("Error in function zavrsavanjeTermina. " + ex.Message);
+                }
+            }
         }
     }
 
     public void ponistavanjePrisustva(int IDDnevniStatusOsobeNaLokaciji, out int result)
     {
-        try
+        using (SqlConnection objConn = new SqlConnection(bioconnectionstring))
         {
-            SqlConnection objConn = new SqlConnection(bioconnectionstring);
-            SqlCommand objCmd = new SqlCommand("spPonistavanjePrisustva", objConn);
-            objCmd.CommandType = CommandType.StoredProcedure;
+            using (SqlCommand objCmd = new SqlCommand("spPonistavanjePrisustva", objConn))
+            {
+                try
+                {
+                    objCmd.CommandType = CommandType.StoredProcedure;
 
-            objCmd.Parameters.Add("@IDDnevniStatusOsobeNaLokaciji", System.Data.SqlDbType.Int).Value = IDDnevniStatusOsobeNaLokaciji;
+                    objCmd.Parameters.Add("@IDDnevniStatusOsobeNaLokaciji", System.Data.SqlDbType.Int).Value = IDDnevniStatusOsobeNaLokaciji;
 
-            objCmd.Parameters.Add("@err", System.Data.SqlDbType.Int);
-            objCmd.Parameters["@err"].Direction = ParameterDirection.ReturnValue;
+                    objCmd.Parameters.Add("@err", System.Data.SqlDbType.Int);
+                    objCmd.Parameters["@err"].Direction = ParameterDirection.ReturnValue;
 
-            objConn.Open();
-            objCmd.ExecuteNonQuery();
+                    objConn.Open();
+                    objCmd.ExecuteNonQuery();
 
-            //Retrieve the value of the output parameter
-            result = Convert.ToInt32(objCmd.Parameters["@err"].Value);
+                    //Retrieve the value of the output parameter
+                    result = Convert.ToInt32(objCmd.Parameters["@err"].Value);
 
-            objConn.Close();
-        }
-        catch (Exception ex)
-        {
-            log.Error("Error in function ponistavanjePrisustva. " + ex.Message);
-            throw new Exception("Error in function ponistavanjePrisustva. " + ex.Message);
+                    objConn.Close();
+                }
+                catch (Exception ex)
+                {
+                    log.Error("Error in function ponistavanjePrisustva. " + ex.Message);
+                    throw new Exception("Error in function ponistavanjePrisustva. " + ex.Message);
+                }
+            }
         }
     }
 
@@ -548,61 +578,69 @@ WHERE        (IDLokacija = @idlokacije)";
 
     public void upisivanjePrisustvaRucno(string brojIndeksa, int idLokacija, DateTime datum, TimeSpan Vreme, out int result)
     {
-        try
+        using (SqlConnection objConn = new SqlConnection(bioconnectionstring))
         {
-            SqlConnection objConn = new SqlConnection(bioconnectionstring);
-            SqlCommand objCmd = new SqlCommand("spUpisivanjePrisustvaRucno", objConn);
-            objCmd.CommandType = CommandType.StoredProcedure;
+            using (SqlCommand objCmd = new SqlCommand("spUpisivanjePrisustvaRucno", objConn))
+            {
+                try
+                {
+                    objCmd.CommandType = CommandType.StoredProcedure;
 
-            objCmd.Parameters.AddWithValue("@brojIndeksa", brojIndeksa);
-            objCmd.Parameters.Add("@idLokacija", System.Data.SqlDbType.Int).Value = idLokacija;
-            objCmd.Parameters.AddWithValue("@datum", datum);
-            objCmd.Parameters.AddWithValue("@vreme", Vreme);
+                    objCmd.Parameters.AddWithValue("@brojIndeksa", brojIndeksa);
+                    objCmd.Parameters.Add("@idLokacija", System.Data.SqlDbType.Int).Value = idLokacija;
+                    objCmd.Parameters.AddWithValue("@datum", datum);
+                    objCmd.Parameters.AddWithValue("@vreme", Vreme);
 
-            objCmd.Parameters.Add("@err", System.Data.SqlDbType.Int);
-            objCmd.Parameters["@err"].Direction = ParameterDirection.ReturnValue;
+                    objCmd.Parameters.Add("@err", System.Data.SqlDbType.Int);
+                    objCmd.Parameters["@err"].Direction = ParameterDirection.ReturnValue;
 
-            objConn.Open();
-            objCmd.ExecuteNonQuery();
+                    objConn.Open();
+                    objCmd.ExecuteNonQuery();
 
-            //Retrieve the value of the output parameter
-            result = Convert.ToInt32(objCmd.Parameters["@err"].Value);
+                    //Retrieve the value of the output parameter
+                    result = Convert.ToInt32(objCmd.Parameters["@err"].Value);
 
-            objConn.Close();
-        }
-        catch (Exception ex)
-        {
-            log.Error("Error in function upisivanjePrisustvaRucno. " + ex.Message);
-            throw new Exception("Error in function upisivanjePrisustvaRucno. " + ex.Message);
+                    objConn.Close();
+                }
+                catch (Exception ex)
+                {
+                    log.Error("Error in function upisivanjePrisustvaRucno. " + ex.Message);
+                    throw new Exception("Error in function upisivanjePrisustvaRucno. " + ex.Message);
+                }
+            }
         }
     }
 
 
     public void brisanjePredavanjaIzTermina(int IDTerminPredavanja, out int result)
     {
-        try
+        using (SqlConnection objConn = new SqlConnection(bioconnectionstring))
         {
-            SqlConnection objConn = new SqlConnection(bioconnectionstring);
-            SqlCommand objCmd = new SqlCommand("spBrisanjePredavanjaIzTermina", objConn);
-            objCmd.CommandType = CommandType.StoredProcedure;
+            using (SqlCommand objCmd = new SqlCommand("spBrisanjePredavanjaIzTermina", objConn))
+            {
+                try
+                {
+                    objCmd.CommandType = CommandType.StoredProcedure;
 
-            objCmd.Parameters.Add("@idTerminPredavanja", System.Data.SqlDbType.Int).Value = IDTerminPredavanja;
+                    objCmd.Parameters.Add("@idTerminPredavanja", System.Data.SqlDbType.Int).Value = IDTerminPredavanja;
 
-            objCmd.Parameters.Add("@err", System.Data.SqlDbType.Int);
-            objCmd.Parameters["@err"].Direction = ParameterDirection.ReturnValue;
+                    objCmd.Parameters.Add("@err", System.Data.SqlDbType.Int);
+                    objCmd.Parameters["@err"].Direction = ParameterDirection.ReturnValue;
 
-            objConn.Open();
-            objCmd.ExecuteNonQuery();
+                    objConn.Open();
+                    objCmd.ExecuteNonQuery();
 
-            //Retrieve the values of the output parameters
-            result = Convert.ToInt32(objCmd.Parameters["@err"].Value);
+                    //Retrieve the values of the output parameters
+                    result = Convert.ToInt32(objCmd.Parameters["@err"].Value);
 
-            objConn.Close();
-        }
-        catch (Exception ex)
-        {
-            log.Error("Error in function brisanjePredavanjaIzTermina. " + ex.Message);
-            throw new Exception("Error in function brisanjePredavanjaIzTermina. " + ex.Message);
+                    objConn.Close();
+                }
+                catch (Exception ex)
+                {
+                    log.Error("Error in function brisanjePredavanjaIzTermina. " + ex.Message);
+                    throw new Exception("Error in function brisanjePredavanjaIzTermina. " + ex.Message);
+                }
+            }
         }
     }
 

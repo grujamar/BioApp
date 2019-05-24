@@ -101,8 +101,14 @@
                                 </ContentTemplate>
                             </asp:UpdatePanel>
                             <div class="col-12 col-md-3 mb-1 ml-auto py-2">
-                                <asp:Button ID="btnEnd" runat="server" Text="Završi predavanje" CssClass="btn btn-danger btn-lg px-5" OnClick="btnEnd_Click" OnClientClick="unhook()" TabIndex="10"/>
-                                <asp:Button ID="btnEdit" runat="server" Text="Izmeni predavanje" CssClass="btn btn-warning px-2 mt-5" OnClick="btnEdit_Click" OnClientClick="unhook()" TabIndex="12"/>
+                                <div class="row">
+                                    <div  class="col-12">
+                                        <asp:Button ID="btnEnd" runat="server" Text="Završi predavanje" CssClass="btn btn-danger btn-lg px-5" OnClick="btnEnd_Click" OnClientClick="unhook()" TabIndex="10"/>
+                                    </div>
+                                    <div  class="col-12">
+                                        <asp:Button ID="btnEdit" runat="server" Text="Izmeni predavanje" CssClass="btn btn-warning px-2 mt-4" OnClick="btnEdit_Click" OnClientClick="unhook()" TabIndex="12"/>
+                                    </div>
+                                </div>   
                             </div>
                         </div>
                         <div class="row mt-0">
@@ -118,13 +124,15 @@
                                     <ContentTemplate>
                                         <fieldset>
                                             <div class="row">
-                                                <div class="col-8 d-flex">
-                                                    <div class="w-50">
-                                                        <asp:TextBox ID="txtIndexNumber" runat="server" CssClass="submit-textbox" maxlength="20" placeholder="upiši broj indeksa"></asp:TextBox>
+                                                <div class="col-8">
+                                                    <div class="row">
+                                                        <div class="col-12 col-sm-6">
+                                                            <asp:TextBox ID="txtIndexNumber" runat="server" CssClass="submit-textbox" maxlength="20" placeholder="upiši broj indeksa"></asp:TextBox>
+                                                        </div>
+                                                        <div class="col-12 col-sm-6">
+                                                            <asp:Button ID="btnAddIndex" runat="server" Text="+ Dodaj prisustvo" CssClass="btn btn-secondary px-3" OnClick="btnAddIndex_Click" OnClientClick="unhook()"/>
+                                                        </div>
                                                     </div>
-                                                    <aside class="w-50">
-                                                        <asp:Button ID="btnAddIndex" runat="server" Text="+ Dodaj prisustvo" CssClass="btn btn-secondary px-3" OnClick="btnAddIndex_Click" OnClientClick="unhook()"/>
-                                                    </aside>
                                                 </div>
                                                 <div class="col-4">
                                                     <asp:CustomValidator ID="cvIndexNumber" runat="server" ErrorMessage="" controltovalidate="txtIndexNumber" Display="Dynamic" ForeColor="Red" CssClass="submit-customValidator" ValidateEmptyText="true" OnServerValidate="cvIndexNumber_ServerValidate" ValidationGroup="AddCustomValidatorToGroup"></asp:CustomValidator>
@@ -174,8 +182,8 @@
                                                             </ItemTemplate>
                                                             <ItemStyle HorizontalAlign="Center" />
                                                         </asp:TemplateField>
-                                                        <asp:BoundField DataField="BrojIndeksa" HeaderText="Broj Indeksa" SortExpression="BrojIndeksa"/>
-                                                        <asp:BoundField DataField="TipStatusa" HeaderText="Tip Statusa" SortExpression="TipStatusa"/>
+                                                        <asp:BoundField DataField="BrojIndeksa" HeaderText="Broj indeksa" SortExpression="BrojIndeksa"/>
+                                                        <asp:BoundField DataField="TipStatusa" HeaderText="Tip statusa" SortExpression="TipStatusa"/>
                                                         <asp:BoundField DataField="Boja" HeaderText="Boja" SortExpression="Boja" Visible="false"/>
                                                         <asp:BoundField DataField="IDOsoba" HeaderText="IDOsoba" SortExpression="IDOsoba" Visible="false"/>
                                                         <asp:BoundField DataField="IDDnevniStatusOsobeNaLokaciji" HeaderText="IDDnevniStatusOsobeNaLokaciji" InsertVisible="False" ReadOnly="True" SortExpression="IDDnevniStatusOsobeNaLokaciji" Visible="false"/>
@@ -215,7 +223,7 @@
                                             <div class="gridview-right-side">
                                                 <asp:GridView ID="GridView2" runat="server" AutoGenerateColumns="False" AllowPaging="True" AllowSorting="True" ShowHeaderWhenEmpty="True" Width="100%" style="margin-top: 0px" OnRowDataBound="GridView2_RowDataBound" Height="100%" DataSourceID="dsDnevniStatusZbirno">
                                                 <Columns>
-                                                    <asp:BoundField DataField="TipStatusa" HeaderText="TipStatusa" SortExpression="TipStatusa"/>
+                                                    <asp:BoundField DataField="TipStatusa" HeaderText="Tip statusa" SortExpression="TipStatusa"/>
                                                     <asp:BoundField DataField="Boja" HeaderText="Boja" SortExpression="Boja" Visible="false"/>
                                                     <asp:BoundField DataField="Ukupno" HeaderText="Ukupno" SortExpression="Ukupno"/>
                                                     <asp:BoundField DataField="DaLiSePrijavaOdnosiNaTrenutniTermin" HeaderText="DaLiSePrijavaOdnosiNaTrenutniTermin" SortExpression="DaLiSePrijavaOdnosiNaTrenutniTermin" Visible="false"/>
