@@ -30,7 +30,7 @@
         <div class="user-icon mt-3"></div>
         <form name="login-form" class="login-form" method="post" runat="server" >
             <div class="header">
-                <h1>Predavanja</h1>
+                <h1>Nastava</h1>
                 <asp:Label ID="lblLocation" runat="server" style="font-size:15px;" ForeColor="Gray"></asp:Label><br>
                 <span>Popunite vaše korisničke informacije.</span>
             </div>

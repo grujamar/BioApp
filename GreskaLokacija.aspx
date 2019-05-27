@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" AutoEventWireup="true" CodeFile="GreskaBaza.aspx.cs" Inherits="GreskaBaza" %>
+﻿<%@ Page Language="C#" AutoEventWireup="true" CodeFile="GreskaLokacija.aspx.cs" Inherits="GreskaLokacija" %>
 
 <!DOCTYPE html>
 

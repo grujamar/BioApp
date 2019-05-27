@@ -141,6 +141,11 @@ public partial class index : System.Web.UI.Page
                     }
                 }
             }
+            else
+            {
+                Response.Redirect("GreskaTerminPredavanja.aspx", false);
+                log.Error("Error on Index page. ");
+            }
         }
         catch (Exception ex)
         {

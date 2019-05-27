@@ -48,6 +48,11 @@ public partial class predavanje : System.Web.UI.Page
                 lblstranicanaziv.Text = utility.getImeLokacije(Convert.ToInt32(Session["login-IDLokacija"]));
                 log.Debug("Location name - " + lblstranicanaziv.Text);
             }
+            else
+            {
+                Response.Redirect("GreskaLokacija.aspx", false);
+                log.Error("Error on Predavanje page. ");
+            }
         }
     }
 
