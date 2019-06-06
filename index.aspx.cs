@@ -12,6 +12,8 @@ using System.Web.UI;
 using System.Web.UI.HtmlControls;
 using System.Web.UI.WebControls;
 using System.Security.Cryptography;
+using Microsoft.Reporting.WebForms;
+using System.IO;
 
 public partial class index : System.Web.UI.Page
 {
@@ -146,6 +148,8 @@ public partial class index : System.Web.UI.Page
                 Response.Redirect("GreskaTerminPredavanja.aspx", false);
                 log.Error("Error on Index page. ");
             }
+
+            
         }
         catch (Exception ex)
         {
@@ -636,5 +640,61 @@ public partial class index : System.Web.UI.Page
             log.Error("Button submit error. " + ex.Message);
             HideDatepicker();
         }
+    }
+
+
+
+    protected void Export(object sender, EventArgs e)
+    {
+        try
+        {
+            Warning[] warnings;
+            string[] streamIds;
+            string contentType;
+            string encoding;
+            string extension;
+
+            string path = System.Configuration.ConfigurationManager.AppSettings["PDFurl"].ToString();
+            Guid id = Guid.NewGuid();
+            string fileName = "Izvestaj-" + DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss") + "-id-" + id.ToString() + ".pdf";
+            log.Debug("FileName for import to DB: " + fileName);
+            Utility utility = new Utility();
+
+            utility.upisiNazivFajla(Convert.ToInt32(Session["idTerminPredavanja"]), fileName);
+        
+            dynamic savePath2 = (path + "\\" + fileName);
+
+            //Export the RDLC Report to Byte Array.
+            byte[] bytes = ReportViewer1.LocalReport.Render("PDF", null, out contentType, out encoding, out extension, out streamIds, out warnings);
+
+            FileStream file = default(FileStream);
+
+            file = new FileStream(savePath2, FileMode.Create);
+            file.Write(bytes, 0, bytes.Length);
+
+            file.Close();
+            file.Dispose();
+        }
+        catch (Exception ex)
+        {
+            log.Error("Error in Export. " + ex);
+            ScriptManager.RegisterStartupScript(this, GetType(), "erroralertFileName", "erroralertFileName();", true);
+        }
+    }
+
+    protected override void OnPreRenderComplete(EventArgs e)
+    {
+        int idTerminPredavanja = Convert.ToInt32(Session["idTerminPredavanja"]);
+        if (idTerminPredavanja != 0)
+        {
+            Export(null, null);
+            Session["idTerminPredavanja"] = 0;
+        }
+        reportHiding.Visible = false;
+    }
+
+    protected void btnReport_Click(object sender, EventArgs e)
+    {
+        Response.Redirect("pregledIzvestaji.aspx", false);
     }
 }

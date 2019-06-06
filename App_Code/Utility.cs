@@ -679,6 +679,70 @@ WHERE        (IDLokacija = @idlokacije)";
 
         return Pocetak;
     }
+
+
+    public void upisiNazivFajla(int IdTerminPredavanja, string nazivFajla)
+    {
+
+        string upit = @"update TerminPredavanja
+                        set Izvestaj = @nazivFajla
+                        where IDTerminPredavanja = @idterminpredavanja";
+
+        using (SqlConnection objConn = new SqlConnection(bioconnectionstring))
+        {
+            using (SqlCommand objCmd = new SqlCommand(upit, objConn))
+            {
+                try
+                {
+                    objCmd.CommandType = System.Data.CommandType.Text;
+                    objCmd.Parameters.Add("@idterminpredavanja", System.Data.SqlDbType.Int).Value = IdTerminPredavanja;
+                    objCmd.Parameters.AddWithValue("@nazivFajla", nazivFajla);
+                    objConn.Open();
+                    objCmd.ExecuteReader();
+                }
+                catch (Exception ex)
+                {
+                    log.Error("Error in function upisiNazivFajla. " + ex.Message);
+                    throw new Exception("Error in function upisiNazivFajla. " + ex.Message);
+                }
+            }
+        }
+    }
+
+    public List<vIzvestaji> pronadjiPromenljiveIzvestaj(int idOsoba)
+    {
+        List<vIzvestaji> responses = new List<vIzvestaji>();
+
+        string upit = @"SELECT        TOP (100) PERCENT OpisTermina, Izvestaj
+                        FROM            dbo.vIzvestaji
+                        WHERE        (IDOsoba = @idOsoba)
+                        ORDER BY Datum, Pocetak";
+
+        using (SqlConnection objConn = new SqlConnection(bioconnectionstring))
+        {
+            using (SqlCommand objCmd = new SqlCommand(upit, objConn))
+            {
+                try
+                {
+                    objCmd.CommandType = System.Data.CommandType.Text;
+                    objCmd.Parameters.Add("@idOsoba", System.Data.SqlDbType.Int).Value = idOsoba;
+                    objConn.Open();
+                    SqlDataReader reader = objCmd.ExecuteReader();
+                    while (reader.Read())
+                    {
+                        responses.Add(new vIzvestaji(reader.GetSqlString(0).ToString(), reader.GetSqlString(1).ToString()));
+                    }
+                }
+                catch (Exception ex)
+                {
+                    log.Error("Error in function pronadjiPromenljiveIzvestaj. " + ex.Message);
+                    throw new Exception("Error in function pronadjiPromenljiveIzvestaj. " + ex.Message);
+                }
+            }
+        }
+
+        return responses;
+    }
     /*
     public void upisiOrganizaciju(string organizacija)
     {

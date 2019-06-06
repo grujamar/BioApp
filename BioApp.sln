@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.28307.645
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "BioApp(2)", ".", "{9F50E0BB-90DF-49B5-9A4E-8D337671BB78}"
+Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "BioApp(2)", "..\BioApp", "{9F50E0BB-90DF-49B5-9A4E-8D337671BB78}"
 	ProjectSection(WebsiteProperties) = preProject
 		TargetFrameworkMoniker = ".NETFramework,Version%3Dv4.7.1"
 		Debug.AspNetCompiler.VirtualPath = "/localhost_61866"
@@ -35,6 +35,6 @@ Global
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {924F1F49-5051-4EE6-8712-55CF299E7A14}
+		SolutionGuid = {D476802B-CC7F-4CB3-AA52-71B35A5E14F4}
 	EndGlobalSection
 EndGlobal

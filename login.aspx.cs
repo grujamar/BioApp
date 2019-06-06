@@ -96,6 +96,8 @@ public partial class login : System.Web.UI.Page
     {
         try
         {
+            Session["idTerminPredavanja"] = 0;
+
             if (Page.IsValid)
             {
                 int IDLokacija = Convert.ToInt32(Session["login-IDLokacija"]);

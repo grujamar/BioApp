@@ -28,7 +28,7 @@ public partial class predavanje : System.Web.UI.Page
 
         if (!Page.IsPostBack)
         {
-            if (Session["login_Ime"] != null && Session["lbl_loginID"] != null)
+            if (Session["login_Ime"] != null && Session["lbl_loginID"] != null && Session["login_IDLogPredavanja"] != null)
             {
                 if (Session["Predavanja_predmetiNazivi"] != null)
                 {
@@ -197,6 +197,7 @@ public partial class predavanje : System.Web.UI.Page
             }
             else
             {
+                Session["login_IDLogPredavanja"] = null;
                 btnLogout.Enabled = true;
                 string PageToRedirect = "index.aspx";
                 int idTerminPredavanjaIzmena = 0;
@@ -215,6 +216,7 @@ public partial class predavanje : System.Web.UI.Page
                     throw new Exception("Error while opening the Page: " + PageToRedirect + " . Error message: " + ex.Message);
                 }
             }
+            Session["idTerminPredavanja"] = Convert.ToInt32(Session["Predavanje_idTerminPredavanja"]);
         }
         catch (Exception ex)
         {

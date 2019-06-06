@@ -29,3 +29,11 @@ function erroralertTermin() {
         type: 'OK'
     });
 };
+
+function erroralertFileName() {
+    swal({
+        title: 'Greška.',
+        text: 'Greška prilikom unosa imena izveštaja u bazu podataka.',
+        type: 'OK'
+    });
+};
