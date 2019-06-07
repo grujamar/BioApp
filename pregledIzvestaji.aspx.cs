@@ -40,6 +40,7 @@ public partial class pregledIzvestaji : System.Web.UI.Page
             HtmlGenericControl li;
             Utility utility = new Utility();
             IzvestajiVariables = utility.pronadjiPromenljiveIzvestaj(Convert.ToInt32(Session["lbl_loginID"]));
+            string hrefPDFurl = System.Configuration.ConfigurationManager.AppSettings["hrefPDFurl"].ToString();
 
             foreach (var izvestajivariables in IzvestajiVariables)
             {
@@ -47,7 +48,7 @@ public partial class pregledIzvestaji : System.Web.UI.Page
                 li.Attributes.Add("class", "submit-label ml-2");
 
                 HtmlGenericControl anchor = new HtmlGenericControl("a");
-                anchor.Attributes.Add("href", "../Dokumentacija/" + izvestajivariables.Izvestaj);
+                anchor.Attributes.Add("href", hrefPDFurl + izvestajivariables.Izvestaj);
                 anchor.Attributes.Add("target", "_blank");
                 anchor.InnerText = izvestajivariables.OpisTermina;
                 //li.InnerText = '<asp:HyperLink ID="btnPrintRequest" runat="server" download="" target="_blank" class="btn-lg btn-default submit" style="margin-right: 8px; " Text="" />';
