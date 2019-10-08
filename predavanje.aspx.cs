@@ -28,8 +28,15 @@ public partial class predavanje : System.Web.UI.Page
 
         if (!Page.IsPostBack)
         {
-            if (Session["login_Ime"] != null && Session["lbl_loginID"] != null && Session["login_IDLogPredavanja"] != null)
+            txtIndexNumber.Attributes.Add("onkeydown", "if(event.which || event.keyCode){if ((event.which == 13) || (event.keyCode == 13)) {document.getElementById('" + btnAddIndex.UniqueID + "').click();return false;}} else {return true}; ");
+
+            int lbl_loginID = Convert.ToInt32(Session["lbl_loginID"]);
+
+            if ((Session["login_Ime"] != null) && ((Session["login_Ime"]).ToString() != string.Empty) && (lbl_loginID != 0))
             {
+                Session["predavanje-event_controle"] = txtIndexNumber;
+                SetFocusOnTextbox();
+
                 if (Session["Predavanja_predmetiNazivi"] != null)
                 {
                     spanIzborKonacno.Text = Session["Predavanje_tipPredavanja"].ToString();
@@ -46,12 +53,12 @@ public partial class predavanje : System.Web.UI.Page
                 TimeSpan trimmedSpan1;
                 TimeSpanNow(out trimmedSpan1);
                 lblstranicanaziv.Text = utility.getImeLokacije(Convert.ToInt32(Session["login-IDLokacija"]));
-                log.Debug("Location name - " + lblstranicanaziv.Text);
+                log.Info(Session["login-ImeLokacijeZaLog"].ToString() + " - " + "Location name - " + lblstranicanaziv.Text);
             }
             else
             {
                 Response.Redirect("GreskaLokacija.aspx", false);
-                log.Error("Error on Predavanje page. ");
+                log.Error(Session["login-ImeLokacijeZaLog"].ToString() + " - " + "Error on Predavanje page. ");
             }
         }
     }
@@ -74,7 +81,7 @@ public partial class predavanje : System.Web.UI.Page
         }
         catch (Exception ex)
         {
-            log.Error("Error in function increasePredmetiList. " + ex.Message);
+            log.Error(Session["login-ImeLokacijeZaLog"].ToString() + " - " + "Error in function increasePredmetiList. " + ex.Message);
             throw new Exception();
         }
     }
@@ -96,7 +103,7 @@ public partial class predavanje : System.Web.UI.Page
         }
         catch (Exception ex)
         {
-            log.Error("Error in function increasePredmetiNazivi. " + ex.Message);
+            log.Error(Session["login-ImeLokacijeZaLog"].ToString() + " - " + "Error in function increasePredmetiNazivi. " + ex.Message);
             throw new Exception();
         }
     }
@@ -117,7 +124,7 @@ public partial class predavanje : System.Web.UI.Page
             Utility utility = new Utility();
 
             utility.logoutPredavanja(Convert.ToInt32(Session["login_IDLogPredavanja"]), out Result);
-            log.Debug("Logout Predavanja: " + ". IDLogPredavanja - " + IDLogPredavanja + " " + ". Rezultat - " + Result);
+            log.Info(Session["login-ImeLokacijeZaLog"].ToString() + " - " + "Logout Predavanja: " + ". IDLogPredavanja - " + IDLogPredavanja + " " + ". Rezultat - " + Result);
 
             if (Result != 0)
             {
@@ -135,7 +142,7 @@ public partial class predavanje : System.Web.UI.Page
         }
         catch (Exception ex)
         {
-            log.Error("Error while trying to LOGOUT. " + ex.Message);
+            log.Error(Session["login-ImeLokacijeZaLog"].ToString() + " - " + "Error while trying to LOGOUT. " + ex.Message);
             ScriptManager.RegisterStartupScript(this, GetType(), "erroralert", "erroralert();", true);
         }
     }
@@ -166,7 +173,7 @@ public partial class predavanje : System.Web.UI.Page
                 foreach (var item in idTerminiPredavanja)
                 {
                     utility.zavrsavanjePredavanja(item, d1TimeSpanTrimmed, procenatZaPriznavanje, out Result);
-                    log.Debug("Zavrsavanje predavanja : " + " IdPredavanje - " + item + " " + ". Kraj - " + d1TimeSpanTrimmed + " " + ". ProcenatZaPriznavanje - " + procenatZaPriznavanje + " " + ". Rezultat - " + Result);
+                    log.Info(Session["login-ImeLokacijeZaLog"].ToString() + " - " + "Zavrsavanje predavanja : " + " IdPredavanje - " + item + " " + ". Kraj - " + d1TimeSpanTrimmed + " " + ". ProcenatZaPriznavanje - " + procenatZaPriznavanje + " " + ". Rezultat - " + Result);
                     if (Result != 0)
                     {
                         throw new Exception("Result from database is diferent from 0. Result is: " + Result);
@@ -181,7 +188,7 @@ public partial class predavanje : System.Web.UI.Page
                 foreach (var item in IDPredavanjeList)
                 {
                     utility.zavrsavanjePredavanja(item.Predavanje1, d1TimeSpanTrimmed, procenatZaPriznavanje, out Result);
-                    log.Debug("Zavrsavanje predavanja : " + " IdPredavanje - " + item.Predavanje1 + " " + ". Kraj - " + d1TimeSpanTrimmed + " " + ". ProcenatZaPriznavanje - " + procenatZaPriznavanje + " " + ". Rezultat - " + Result);
+                    log.Info(Session["login-ImeLokacijeZaLog"].ToString() + " - " + "Zavrsavanje predavanja : " + " IdPredavanje - " + item.Predavanje1 + " " + ". Kraj - " + d1TimeSpanTrimmed + " " + ". ProcenatZaPriznavanje - " + procenatZaPriznavanje + " " + ". Rezultat - " + Result);
                     if (Result != 0)
                     {
                         throw new Exception("Result from database is diferent from 0. Result is: " + Result);
@@ -190,29 +197,29 @@ public partial class predavanje : System.Web.UI.Page
             }
 
             utility.zavrsavanjeTermina(Convert.ToInt32(Session["Predavanje_idTerminPredavanja"]), d1TimeSpanTrimmed, out Result);
-            log.Debug("Zavrsavanje termina : " + " IdTerminPredavanja - " + Convert.ToInt32(Session["Predavanje_idTerminPredavanja"]) + " " + ". Kraj - " + d1TimeSpanTrimmed + " " + ". Rezultat - " + Result);
+            log.Info(Session["login-ImeLokacijeZaLog"].ToString() + " - " + "Zavrsavanje termina : " + " IdTerminPredavanja - " + Convert.ToInt32(Session["Predavanje_idTerminPredavanja"]) + " " + ". Kraj - " + d1TimeSpanTrimmed + " " + ". Rezultat - " + Result);
             if (Result != 0)
             {
                 throw new Exception("Result from database is diferent from 0. Result is: " + Result);
             }
             else
             {
-                Session["login_IDLogPredavanja"] = null;
+                //Session["login_IDLogPredavanja"] = null;
                 btnLogout.Enabled = true;
                 string PageToRedirect = "index.aspx";
                 int idTerminPredavanjaIzmena = 0;
                 try
                 {
                     string idTerminPredavanjaIzmena1 = @"IDTerminPredavanja=" + idTerminPredavanjaIzmena;
-                    log.Debug("idTerminPredavanjaIzmena is - " + idTerminPredavanjaIzmena1);
+                    log.Info(Session["login-ImeLokacijeZaLog"].ToString() + " - " + "idTerminPredavanjaIzmena is - " + idTerminPredavanjaIzmena1);
                     string editParameters = AuthenticatedEncryption.AuthenticatedEncryption.Encrypt(idTerminPredavanjaIzmena1, Constants.CryptKey, Constants.AuthKey);
                     editParameters = editParameters.Replace("+", "%252b");
-                    log.Debug("Page to redirect. editParameters is - " + editParameters);
+                    log.Info(Session["login-ImeLokacijeZaLog"].ToString() + " - " + "Page to redirect. editParameters is - " + editParameters);
                     Response.Redirect(string.Format("~/" + PageToRedirect + "?d={0}", editParameters), false);
                 }
                 catch (Exception ex)
                 {
-                    log.Debug("Error while opening the Page: " + PageToRedirect + " . Error message: " + ex.Message);
+                    log.Info(Session["login-ImeLokacijeZaLog"].ToString() + " - " + "Error while opening the Page: " + PageToRedirect + " . Error message: " + ex.Message);
                     throw new Exception("Error while opening the Page: " + PageToRedirect + " . Error message: " + ex.Message);
                 }
             }
@@ -227,7 +234,7 @@ public partial class predavanje : System.Web.UI.Page
             else {
                 increasePredmetiList();
             }
-            log.Error("End button submit error. " + ex.Message);
+            log.Error(Session["login-ImeLokacijeZaLog"].ToString() + " - " + "End button submit error. " + ex.Message);
             ScriptManager.RegisterStartupScript(this, GetType(), "erroralert", "erroralert();", true);
         }
     }
@@ -324,7 +331,7 @@ public partial class predavanje : System.Web.UI.Page
 
                 Utility utility = new Utility();
                 utility.ponistavanjePrisustva(IDDnevniStatusOsobeNaLokaciji, out Result);
-                log.Debug("Ponistavanje prisustva : " + " RowNo - " + rowno + " IDDnevniStatusOsobeNaLokaciji - " + IDDnevniStatusOsobeNaLokaciji + " " + ". Rezultat - " + Result);
+                log.Info(Session["login-ImeLokacijeZaLog"].ToString() + " - " + "Ponistavanje prisustva : " + " RowNo - " + rowno + " IDDnevniStatusOsobeNaLokaciji - " + IDDnevniStatusOsobeNaLokaciji + " " + ". Rezultat - " + Result);
                 if (Result != 0)
                 {
                     throw new Exception("Result from database is diferent from 0. Result is: " + Result);
@@ -333,7 +340,7 @@ public partial class predavanje : System.Web.UI.Page
         }
         catch (Exception ex)
         {
-            log.Error("Clear GW button error. " + ex.Message);
+            log.Error(Session["login-ImeLokacijeZaLog"].ToString() + " - " + "Clear GW button error. " + ex.Message);
             ScriptManager.RegisterStartupScript(this, GetType(), "erroralert", "erroralert();", true);
         }
     }
@@ -357,7 +364,7 @@ public partial class predavanje : System.Web.UI.Page
                 int Result = 0;
 
                 utility.upisivanjePrisustvaRucno(txtIndexNumber.Text, Convert.ToInt32(Session["login-IDLokacija"]), dateOnly, timeOnly, out Result);
-                log.Debug("upisivanjePrisustvaRucno : " + " BrojIndeksa - " + txtIndexNumber.Text + " " + ". IDLokacije - " + Convert.ToInt32(Session["login-IDLokacija"]) + " " + ". Datum - " + dateOnly + " " + ". Vreme - " + timeOnly + " " + ". Rezultat - " + Result);
+                log.Info(Session["login-ImeLokacijeZaLog"].ToString() + " - " + "upisivanjePrisustvaRucno : " + " BrojIndeksa - " + txtIndexNumber.Text + " " + ". IDLokacije - " + Convert.ToInt32(Session["login-IDLokacija"]) + " " + ". Datum - " + dateOnly + " " + ". Vreme - " + timeOnly + " " + ". Rezultat - " + Result);
                 if (Result != 0)
                 {
                     throw new Exception("Result from database is diferent from 0. Result is: " + Result);
@@ -365,6 +372,8 @@ public partial class predavanje : System.Web.UI.Page
                 else {
                     txtIndexNumber.Text = string.Empty;
                 }
+                Session["predavanje-event_controle"] = txtIndexNumber;
+                SetFocusOnTextbox();
             }
             else if (!Page.IsValid)
             {
@@ -373,8 +382,10 @@ public partial class predavanje : System.Web.UI.Page
         }
         catch (Exception ex)
         {
-            log.Error("btnAddIndex submit error. " + ex.Message);
+            log.Error(Session["login-ImeLokacijeZaLog"].ToString() + " - " + "btnAddIndex submit error. " + ex.Message);
             ScriptManager.RegisterStartupScript(this, GetType(), "erroralert", "erroralert();", true);
+            Session["predavanje-event_controle"] = txtIndexNumber;
+            SetFocusOnTextbox();
         }
     }
 
@@ -400,16 +411,33 @@ public partial class predavanje : System.Web.UI.Page
         try
         {
             string idTerminPredavanjaIzmena1 = @"IDTerminPredavanja=" + idTerminPredavanjaIzmena;
-            log.Debug("Edit predavanje started. idTerminPredavanjaIzmena is - " + idTerminPredavanjaIzmena1);
+            log.Info(Session["login-ImeLokacijeZaLog"].ToString() + " - " + "Edit predavanje started. idTerminPredavanjaIzmena is - " + idTerminPredavanjaIzmena1);
             string editParameters = AuthenticatedEncryption.AuthenticatedEncryption.Encrypt(idTerminPredavanjaIzmena1, Constants.CryptKey, Constants.AuthKey);
             editParameters = editParameters.Replace("+", "%252b");
-            log.Debug("Page to redirect. editParameters is - " + editParameters);
+            log.Info(Session["login-ImeLokacijeZaLog"].ToString() + " - " + "Page to redirect. editParameters is - " + editParameters);
             Response.Redirect(string.Format("~/" + PageToRedirect + "?d={0}", editParameters), false);
         }
         catch (Exception ex)
         {
-            log.Debug("Error while opening the Page: " + PageToRedirect + " . Error message: " + ex.Message);
+            log.Info(Session["login-ImeLokacijeZaLog"].ToString() + " - " + "Error while opening the Page: " + PageToRedirect + " . Error message: " + ex.Message);
             ScriptManager.RegisterStartupScript(this, GetType(), "errorOpeningPage", "errorOpeningPage();", true);
+        }
+    }
+
+    public void SetFocusOnTextbox()
+    {
+        try
+        {
+            if (Session["predavanje-event_controle"] != null)
+            {
+                TextBox controle = (TextBox)Session["predavanje-event_controle"];
+                //controle.Focus();
+                ScriptManager.RegisterStartupScript(Page, Page.GetType(), "foc", "document.getElementById('" + controle.ClientID + "').focus();", true);
+            }
+        }
+        catch (InvalidCastException inEx)
+        {
+            log.Error("Problem with setting focus on control. Error: " + inEx);
         }
     }
 

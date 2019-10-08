@@ -127,10 +127,10 @@
                                                 <div class="col-8">
                                                     <div class="row">
                                                         <div class="col-12 col-sm-6">
-                                                            <asp:TextBox ID="txtIndexNumber" runat="server" CssClass="submit-textbox" maxlength="20" placeholder="upiši broj indeksa"></asp:TextBox>
+                                                            <asp:TextBox ID="txtIndexNumber" runat="server" CssClass="submit-textbox" maxlength="20" placeholder="upiši broj indeksa" TabIndex="1"></asp:TextBox>
                                                         </div>
                                                         <div class="col-12 col-sm-6">
-                                                            <asp:Button ID="btnAddIndex" runat="server" Text="+ Dodaj prisustvo" CssClass="btn btn-secondary px-3" OnClick="btnAddIndex_Click" OnClientClick="unhook()"/>
+                                                            <asp:Button ID="btnAddIndex" runat="server" Text="+ Dodaj prisustvo" CssClass="btn btn-secondary px-3" OnClick="btnAddIndex_Click" OnClientClick="unhook()" TabIndex="2"/>
                                                         </div>
                                                     </div>
                                                 </div>

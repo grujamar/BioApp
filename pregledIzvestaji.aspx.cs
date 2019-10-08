@@ -59,7 +59,7 @@ public partial class pregledIzvestaji : System.Web.UI.Page
         }
         catch (Exception ex)
         {
-            log.Error("Error in function increaseReportList. " + ex.Message);
+            log.Error(Session["login-ImeLokacijeZaLog"].ToString() + " - " + " Error in function increaseReportList. " + ex.Message);
             throw new Exception();
         }
     }
@@ -79,7 +79,7 @@ public partial class pregledIzvestaji : System.Web.UI.Page
             Utility utility = new Utility();
 
             utility.logoutPredavanja(Convert.ToInt32(Session["login_IDLogPredavanja"]), out Result);
-            log.Debug("Logout Predavanja: " + ". IDLogPredavanja - " + Convert.ToInt32(Session["login_IDLogPredavanja"]) + " " + ". Rezultat - " + Result);
+            log.Info(Session["login-ImeLokacijeZaLog"].ToString() + " - " + "Logout Predavanja: " + ". IDLogPredavanja - " + Convert.ToInt32(Session["login_IDLogPredavanja"]) + " " + ". Rezultat - " + Result);
 
             if (Result != 0)
             {
@@ -95,14 +95,14 @@ public partial class pregledIzvestaji : System.Web.UI.Page
                 string location = @"idLokacija=" + IDLokacija;
                 string encryptedParameters = AuthenticatedEncryption.AuthenticatedEncryption.Encrypt(location, Constants.CryptKey, Constants.AuthKey);
                 encryptedParameters = encryptedParameters.Replace("+", "%252b");
-                log.Debug("encryptedParameters, when trying to logout is - " + encryptedParameters);
+                log.Info(Session["login-ImeLokacijeZaLog"].ToString() + " - " + "encryptedParameters, when trying to logout is - " + encryptedParameters);
                 Response.Redirect(string.Format("~/login.aspx?d={0}", encryptedParameters), false);
 
             }
         }
         catch (Exception ex)
         {
-            log.Error("Error while trying to LOGOUT. " + ex.Message);
+            log.Error(Session["login-ImeLokacijeZaLog"].ToString() + " - " + " Error while trying to LOGOUT. " + ex.Message);
             ScriptManager.RegisterStartupScript(this, GetType(), "erroralert", "erroralert();", true);
         }
     }
@@ -114,15 +114,15 @@ public partial class pregledIzvestaji : System.Web.UI.Page
         try
         {
             string idTerminPredavanjaIzmena1 = @"IDTerminPredavanja=" + idTerminPredavanjaIzmena;
-            log.Debug("Back button. idTerminPredavanjaIzmena is - " + idTerminPredavanjaIzmena1);
+            log.Info(Session["login-ImeLokacijeZaLog"].ToString() + " - " + "Back button. idTerminPredavanjaIzmena is - " + idTerminPredavanjaIzmena1);
             string editParameters = AuthenticatedEncryption.AuthenticatedEncryption.Encrypt(idTerminPredavanjaIzmena1, Constants.CryptKey, Constants.AuthKey);
             editParameters = editParameters.Replace("+", "%252b");
-            log.Debug("Back button. Page to redirect. editParameters is - " + editParameters);
+            log.Info(Session["login-ImeLokacijeZaLog"].ToString() + " - " + "Back button. Page to redirect. editParameters is - " + editParameters);
             Response.Redirect(string.Format("~/" + PageToRedirect + "?d={0}", editParameters), false);
         }
         catch (Exception ex)
         {
-            log.Debug("Error while opening the Page: " + PageToRedirect + " . Error message: " + ex.Message);
+            log.Info(Session["login-ImeLokacijeZaLog"].ToString() + " - " + "Error while opening the Page: " + PageToRedirect + " . Error message: " + ex.Message);
             throw new Exception("Error while opening the Page: " + PageToRedirect + " . Error message: " + ex.Message);
         }
     }

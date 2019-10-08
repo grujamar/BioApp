@@ -116,7 +116,7 @@ public static class Utils
             ErrorMessage1 = "Datum je obavezno polje. ";
             returnValue = false;
         }else if (datum > DateTime.ParseExact(DateTime.Now.ToString("dd.MM.yyy"), "dd.MM.yyyy", null)){
-            log.Debug("DateTimeNow je: " + DateTime.ParseExact(DateTime.Now.ToString("dd.MM.yyy"), "dd.MM.yyyy", null));
+            log.Info("DateTimeNow je: " + DateTime.ParseExact(DateTime.Now.ToString("dd.MM.yyy"), "dd.MM.yyyy", null));
             ErrorMessage1 = "Datum mora biti manji od današnjeg. ";
             returnValue = false;
         }else{

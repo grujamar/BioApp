@@ -37,7 +37,7 @@ public partial class index : System.Web.UI.Page
         try
         {
             string encryptedParameters = Request.QueryString["d"];
-            log.Debug("encryptedParameters on Index page - " + encryptedParameters);
+            log.Info(Session["login-ImeLokacijeZaLog"].ToString() + " - " + " encryptedParameters on Index page - " + encryptedParameters);
 
             if ((encryptedParameters != string.Empty) && (encryptedParameters != null))
             {
@@ -59,7 +59,7 @@ public partial class index : System.Web.UI.Page
                 {
                     ChangeButtonVisibility(true);
                     Session["Predavanje_idTerminPredavanjaIzmena"] = data;
-                    log.Debug("Predavanje_idTerminPredavanjaIzmena is - " + data);
+                    log.Info(Session["login-ImeLokacijeZaLog"].ToString() + " - " + " Predavanje_idTerminPredavanjaIzmena is - " + data);
                 }
                 else {
                     ChangeButtonVisibility(false);
@@ -77,16 +77,16 @@ public partial class index : System.Web.UI.Page
                         List<int> predmetiList = new List<int>();
                         TimeSpan d1 = new TimeSpan();
                         utility.getTerminPredavanjaKraj(idOsoba, IDLokacija, out IDTerminPredavanja, out IDLogPredavanja, out predmetiList, out d1);
-                        log.Debug("Check in table TerminPredavanja if Kraj is null. IDTerminPredavanja - " + IDTerminPredavanja + " IDLokacija - " + IDLokacija + " IDLogPredavanja - " + IDLogPredavanja + " predmetiList.Count - " + predmetiList.Count + " Pocetak - " + d1);
+                        log.Info(Session["login-ImeLokacijeZaLog"].ToString() + " - " + " Check in table TerminPredavanja if Kraj is null. IDTerminPredavanja - " + IDTerminPredavanja + " IDLokacija - " + IDLokacija + " IDLogPredavanja - " + IDLogPredavanja + " predmetiList.Count - " + predmetiList.Count + " Pocetak - " + d1);
 
                         lblstranicanaziv.Text = utility.getImeLokacije(Convert.ToInt32(Session["login-IDLokacija"]));
-                        log.Debug("Location name - " + lblstranicanaziv.Text);
+                        log.Info(Session["login-ImeLokacijeZaLog"].ToString() + " - " + " Location name - " + lblstranicanaziv.Text);
 
                         if (IDTerminPredavanja != 0)
                         {
                             List<int> idTerminiPredavanja = new List<int>();
                             utility.getIDTerminePredavanja(IDTerminPredavanja, out idTerminiPredavanja);
-                            log.Debug("IDTerminiPredavanja.Count - " + idTerminiPredavanja.Count);
+                            log.Info(Session["login-ImeLokacijeZaLog"].ToString() + " - " +"IDTerminiPredavanja.Count - " + idTerminiPredavanja.Count);
                             Session["Predavanja-idPonovnogPredavanja"] = idTerminiPredavanja;
                             //Session["Predavanja-idTerminPonovnogPredavanja"] = IDTerminPredavanja;
                             Session["Predavanje_idTerminPredavanja"] = IDTerminPredavanja;
@@ -118,7 +118,7 @@ public partial class index : System.Web.UI.Page
                                 string location = @"idLokacija=" + IDLokacija1;
                                 string encryptedParameters2 = AuthenticatedEncryption.AuthenticatedEncryption.Encrypt(location, Constants.CryptKey, Constants.AuthKey);
                                 encryptedParameters2 = encryptedParameters2.Replace("+", "%252b");
-                                log.Debug("encryptedParameters, when trying to logout is - " + encryptedParameters2);
+                                log.Info(Session["login-ImeLokacijeZaLog"].ToString() + " - " + " encryptedParameters, when trying to logout is - " + encryptedParameters2);
                                 Response.Redirect(string.Format("~/login.aspx?d={0}", encryptedParameters2), false);
                             }
                         }
@@ -137,7 +137,7 @@ public partial class index : System.Web.UI.Page
                             string location = @"idLokacija=" + IDLokacija1;
                             string encryptedParameters2 = AuthenticatedEncryption.AuthenticatedEncryption.Encrypt(location, Constants.CryptKey, Constants.AuthKey);
                             encryptedParameters2 = encryptedParameters2.Replace("+", "%252b");
-                            log.Debug("encryptedParameters, when trying to logout is - " + encryptedParameters2);
+                            log.Info(Session["login-ImeLokacijeZaLog"].ToString() + " - " + " encryptedParameters, when trying to logout is - " + encryptedParameters2);
                             Response.Redirect(string.Format("~/login.aspx?d={0}", encryptedParameters2), false);
                         }
                     }
@@ -146,7 +146,7 @@ public partial class index : System.Web.UI.Page
             else
             {
                 Response.Redirect("GreskaTerminPredavanja.aspx", false);
-                log.Error("Error on Index page. ");
+                log.Error(Session["login-ImeLokacijeZaLog"].ToString() + " - " + "Error on Index page. ");
             }
 
             
@@ -154,7 +154,7 @@ public partial class index : System.Web.UI.Page
         catch (Exception ex)
         {
             Response.Redirect("GreskaTerminPredavanja.aspx", false);
-            log.Error("Error. " + ex);
+            log.Error(Session["login-ImeLokacijeZaLog"].ToString() + " - " + "Error. " + ex);
         }     
     }
 
@@ -173,13 +173,13 @@ public partial class index : System.Web.UI.Page
             foreach (var idpredmet in predmetiList)
             {
                 string predmet = utility.getPredmetNaziv(idOsoba, idpredmet);
-                log.Debug("Predmeti: " + predmet);
+                log.Info(Session["login-ImeLokacijeZaLog"].ToString() + " - " + " Predmeti: " + predmet);
                 predmeti.Add(predmet);
             }
         }
         catch (Exception ex)
         {
-            log.Error("Error in function getPredmetiNaziv. " + ex.Message);
+            log.Error(Session["login-ImeLokacijeZaLog"].ToString() + " - " + "Error in function getPredmetiNaziv. " + ex.Message);
         }
         return predmeti;
     }
@@ -216,7 +216,7 @@ public partial class index : System.Web.UI.Page
             Utility utility = new Utility();
 
             utility.logoutPredavanja(Convert.ToInt32(Session["login_IDLogPredavanja"]), out Result);
-            log.Debug("Logout Predavanja: " + ". IDLogPredavanja - " + Convert.ToInt32(Session["login_IDLogPredavanja"]) + " " + ". Rezultat - " + Result);
+            log.Info(Session["login-ImeLokacijeZaLog"].ToString() + " - " + " Logout Predavanja: " + ". IDLogPredavanja - " + Convert.ToInt32(Session["login_IDLogPredavanja"]) + " " + ". Rezultat - " + Result);
 
             if (Result != 0)
             {
@@ -232,14 +232,14 @@ public partial class index : System.Web.UI.Page
                 string location = @"idLokacija=" + IDLokacija;
                 string encryptedParameters = AuthenticatedEncryption.AuthenticatedEncryption.Encrypt(location, Constants.CryptKey, Constants.AuthKey);
                 encryptedParameters = encryptedParameters.Replace("+", "%252b");
-                log.Debug("encryptedParameters, when trying to logout is - " + encryptedParameters);
+                log.Info(Session["login-ImeLokacijeZaLog"].ToString() + " - " + " encryptedParameters, when trying to logout is - " + encryptedParameters);
                 Response.Redirect(string.Format("~/login.aspx?d={0}", encryptedParameters), false);
    
             }
         }
         catch (Exception ex)
         {
-            log.Error("Error while trying to LOGOUT. " + ex.Message);
+            log.Error(Session["login-ImeLokacijeZaLog"].ToString() + " - " + "Error while trying to LOGOUT. " + ex.Message);
             ScriptManager.RegisterStartupScript(this, GetType(), "erroralert", "erroralert();", true);
         }
     }
@@ -285,7 +285,7 @@ public partial class index : System.Web.UI.Page
             if (txtdate.Text != string.Empty)
             {
                 DateTime datum = DateTime.ParseExact(txtdate.Text, "dd.MM.yyyy", null);
-                log.Debug("Datum je: " + datum);
+                log.Info(Session["login-ImeLokacijeZaLog"].ToString() + " - " + " Datum je: " + datum);
                 string ErrorMessage1 = string.Empty;
 
                 args.IsValid = Utils.ValidateDate(datum, out ErrorMessage1);
@@ -306,7 +306,7 @@ public partial class index : System.Web.UI.Page
         }
         catch (Exception ex)
         {
-            log.Error("Greska prilikom validacije cvdate. " + ex.Message);
+            log.Error(Session["login-ImeLokacijeZaLog"].ToString() + " - " + "Greska prilikom validacije cvdate. " + ex.Message);
             txtdate.Text = string.Empty;
             cvdate.ErrorMessage = "Datum je u pogrešnom formatu. ";
             args.IsValid = false;
@@ -348,13 +348,14 @@ public partial class index : System.Web.UI.Page
                 Utility utility = new Utility();
 
                 utility.zapocinjanjeTermina(IDLokacija, Convert.ToDateTime(FinalDate), d1TimeSpanTrimmed, Convert.ToInt32(Session["lbl_loginID"]), Convert.ToInt32(Session["login_IDLogPredavanja"]), out IDTerminPredavanja, out Result);
-                log.Debug("Zapocinjanje termina: " + " Sifra lokacije - " + IDLokacija + " " + ". Datum - " + FinalDate + " " + ". Pocetak - " + d1TimeSpanTrimmed + " " + ". idOsoba - " + Session["lbl_loginID"].ToString() + " " + ". IDLogPredavanja - " + Session["login_IDLogPredavanja"].ToString() + ". idTerminPredavanja - " + IDTerminPredavanja + " " + ". Rezultat - " + Result);
+
+                log.Info(Session["login-ImeLokacijeZaLog"].ToString() + " - " + " Zapocinjanje termina: " + " Sifra lokacije - " + IDLokacija + " " + ". Datum - " + FinalDate + " " + ". Pocetak - " + d1TimeSpanTrimmed + " " + ". idOsoba - " + Session["lbl_loginID"].ToString() + " " + ". IDLogPredavanja - " + (Convert.ToInt32(Session["login_IDLogPredavanja"])).ToString() + ". idTerminPredavanja - " + IDTerminPredavanja + " " + ". Rezultat - " + Result);
 
                 if (Result == 1)
                 {
                     ScriptManager.RegisterStartupScript(this, GetType(), "erroralerttermin", "erroralertTermin();", true);
                     HideDatepicker();
-                    log.Debug("Greška prilikom unosa termina. Morate završiti predavanje koje je u toku. (Zatvorena stranica)");
+                    log.Info(Session["login-ImeLokacijeZaLog"].ToString() + " - " + " Greška prilikom unosa termina. Morate završiti predavanje koje je u toku. (Zatvorena stranica)");
                 }
                 else
                 {
@@ -373,7 +374,7 @@ public partial class index : System.Web.UI.Page
                         if (item.Selected)
                         {
                             utility.zapocinjanjePredavanja(Convert.ToInt32(Session["Predavanje_idTerminPredavanja"]), Convert.ToInt32(item.Value), Convert.ToInt32(ddlizbor.SelectedValue), out IDPredavanje, out Result);
-                            log.Debug("Upisivanje predavanja : " + " IDTerminPredavanja - " + Convert.ToInt32(Session["Predavanje_idTerminPredavanja"]) + " " + ". idPredmet - " + item.Value + " " + ". idTipPredavanja - " + ddlizbor.SelectedValue + " " + ". idPredavanje - " + IDPredavanje + " " + ". Rezultat - " + Result);
+                            log.Info(Session["login-ImeLokacijeZaLog"].ToString() + " - " + " Upisivanje predavanja : " + " IDTerminPredavanja - " + Convert.ToInt32(Session["Predavanje_idTerminPredavanja"]) + " " + ". idPredmet - " + item.Value + " " + ". idTipPredavanja - " + ddlizbor.SelectedValue + " " + ". idPredavanje - " + IDPredavanje + " " + ". Rezultat - " + Result);
 
                             IDPredavanjeList.Add(new Predavanje(IDPredavanje, Convert.ToInt32(item.Value)));
                         }
@@ -405,7 +406,7 @@ public partial class index : System.Web.UI.Page
             else {
                 ScriptManager.RegisterStartupScript(this, GetType(), "erroralert", "erroralert();", true);
             }
-            log.Error("Button submit error. " + ex.Message);
+            log.Error(Session["login-ImeLokacijeZaLog"].ToString() + " - " + "Button submit error. " + ex.Message);
             HideDatepicker();
         }
     }
@@ -423,7 +424,7 @@ public partial class index : System.Web.UI.Page
         dateTimeFinal = string.Empty;
         DateTime FinalDate1 = DateTime.ParseExact(dateTime, FormatDateTime, CultureInfo.InvariantCulture);
         string FinalDate = FinalDate1.ToString(FormatToString);
-        log.Debug("FinalDate to import: " + FinalDate);
+        log.Info(Session["login-ImeLokacijeZaLog"].ToString() + " - " + " FinalDate to import: " + FinalDate);
 
         dateTimeFinal = FinalDate;
     }
@@ -442,7 +443,7 @@ public partial class index : System.Web.UI.Page
             if (txtdate.Text != string.Empty)
             {
                 DateTime datum = DateTime.ParseExact(txtdate.Text, "dd.MM.yyyy", null);
-                log.Debug("Datum je: " + datum);
+                log.Info(Session["login-ImeLokacijeZaLog"].ToString() + " - " + " Datum je: " + datum);
                 string ErrorMessage1 = string.Empty;
 
                 ReturnValidation = Utils.ValidateDate(datum, out ErrorMessage1);
@@ -464,7 +465,7 @@ public partial class index : System.Web.UI.Page
         }
         catch (Exception ex)
         {
-            log.Error("Greska prilikom validacije txtdate. " + ex.Message);
+            log.Error(Session["login-ImeLokacijeZaLog"].ToString() + " - " + "Greska prilikom validacije txtdate. " + ex.Message);
             txtdate.Text = string.Empty;
             errLabel2.Text = "Datum je u pogrešnom formatu. ";
             Session["Predavanja-event_controle"] = txtdate;
@@ -495,7 +496,7 @@ public partial class index : System.Web.UI.Page
         }
         catch (Exception ex)
         {
-            log.Error("Error in function increasePredmetiList. " + ex.Message);
+            log.Error(Session["login-ImeLokacijeZaLog"].ToString() + " - " + "Error in function increasePredmetiList. " + ex.Message);
             throw new Exception();
         }
     }
@@ -546,7 +547,7 @@ public partial class index : System.Web.UI.Page
         }
         catch (InvalidCastException inEx)
         {
-            log.Error("Problem with setting focus on control. Error: " + inEx);
+            log.Error(Session["login-ImeLokacijeZaLog"].ToString() + " - " + "Problem with setting focus on control. Error: " + inEx);
         }
     }
 
@@ -563,7 +564,7 @@ public partial class index : System.Web.UI.Page
         }
         catch (InvalidCastException inEx)
         {
-            log.Error("Problem with setting focus on control. Error: " + inEx);
+            log.Error(Session["login-ImeLokacijeZaLog"].ToString() + " - " + "Problem with setting focus on control. Error: " + inEx);
         }
     }
 
@@ -576,7 +577,7 @@ public partial class index : System.Web.UI.Page
             Utility utility = new Utility();
 
             utility.brisanjePredavanjaIzTermina(IDTerminPredavanjeIzmena, out Result);
-            log.Debug("brisanjePredavanjaIzTermina: " + " IDTerminPredavanjeIzmena - " + IDTerminPredavanjeIzmena + " " + ". Rezultat - " + Result);
+            log.Info(Session["login-ImeLokacijeZaLog"].ToString() + " - " + " brisanjePredavanjaIzTermina: " + " IDTerminPredavanjeIzmena - " + IDTerminPredavanjeIzmena + " " + ". Rezultat - " + Result);
 
             if (Result != 0)
             {
@@ -612,7 +613,7 @@ public partial class index : System.Web.UI.Page
                         if (item.Selected)
                         {
                             utility.zapocinjanjePredavanja(Convert.ToInt32(Session["Predavanje_idTerminPredavanjaIzmena"]), Convert.ToInt32(item.Value), Convert.ToInt32(ddlizbor.SelectedValue), out IDPredavanje, out Result);
-                            log.Debug("Upisivanje predavanja nakon izmene: " + " IDTerminPredavanja - " + Convert.ToInt32(Session["Predavanje_idTerminPredavanjaIzmena"]) + " " + ". idPredmet - " + item.Value + " " + ". idTipPredavanja - " + ddlizbor.SelectedValue + " " + ". idPredavanje - " + IDPredavanje + " " + ". Rezultat - " + Result);  
+                            log.Info(Session["login-ImeLokacijeZaLog"].ToString() + " - " + " Upisivanje predavanja nakon izmene: " + " IDTerminPredavanja - " + Convert.ToInt32(Session["Predavanje_idTerminPredavanjaIzmena"]) + " " + ". idPredmet - " + item.Value + " " + ". idTipPredavanja - " + ddlizbor.SelectedValue + " " + ". idPredavanje - " + IDPredavanje + " " + ". Rezultat - " + Result);  
                             IDPredavanjeList.Add(new Predavanje(IDPredavanje, Convert.ToInt32(item.Value)));
                         }
                     }
@@ -637,7 +638,7 @@ public partial class index : System.Web.UI.Page
         catch (Exception ex)
         {
             ScriptManager.RegisterStartupScript(this, GetType(), "erroralert", "erroralert();", true);
-            log.Error("Button submit error. " + ex.Message);
+            log.Error(Session["login-ImeLokacijeZaLog"].ToString() + " - " + "Button submit error. " + ex.Message);
             HideDatepicker();
         }
     }
@@ -657,7 +658,7 @@ public partial class index : System.Web.UI.Page
             string path = System.Configuration.ConfigurationManager.AppSettings["PDFurl"].ToString();
             Guid id = Guid.NewGuid();
             string fileName = "Izvestaj-" + DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss") + "-id-" + id.ToString() + ".pdf";
-            log.Debug("FileName for import to DB: " + fileName);
+            log.Info(Session["login-ImeLokacijeZaLog"].ToString() + " - " + " FileName for import to DB: " + fileName);
             Utility utility = new Utility();
 
             utility.upisiNazivFajla(Convert.ToInt32(Session["idTerminPredavanja"]), fileName);
@@ -677,7 +678,7 @@ public partial class index : System.Web.UI.Page
         }
         catch (Exception ex)
         {
-            log.Error("Error in Export. " + ex);
+            log.Error(Session["login-ImeLokacijeZaLog"].ToString() + " - " + "Error in Export. " + ex);
             ScriptManager.RegisterStartupScript(this, GetType(), "erroralertFileName", "erroralertFileName();", true);
         }
     }

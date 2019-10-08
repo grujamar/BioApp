@@ -27,7 +27,7 @@ public partial class login : System.Web.UI.Page
         try
         {
             string encryptedParameters = Request.QueryString["d"];
-            log.Debug("encryptedParameters on Login page - " + encryptedParameters);
+            log.Info("encryptedParameters on Login page - " + encryptedParameters);
 
             if ((encryptedParameters != string.Empty) && (encryptedParameters != null))
             {
@@ -63,12 +63,13 @@ public partial class login : System.Web.UI.Page
                         {
                             log.Info("Aplication successfully start. IDLokacija is: " + idLokacija);
                             lblLocation.Text = utility.getImeLokacije(idLokacija);
-                            log.Debug("Location name - " + lblLocation.Text);
+                            Session["login-ImeLokacijeZaLog"] = lblLocation.Text;
+                            log.Info(Session["login-ImeLokacijeZaLog"].ToString() + " - " + "Location name - " + lblLocation.Text);
                         }
                         else
                         {
                             Response.Redirect("GreskaLokacija.aspx", false);
-                            log.Error("Error. IDLokacija is: " + encryptedParameters);
+                            log.Error(Session["login-ImeLokacijeZaLog"].ToString() + " - " + "Error. IDLokacija is: " + encryptedParameters);
                         }
                     }
                 }
@@ -76,13 +77,17 @@ public partial class login : System.Web.UI.Page
             else
             {
                 Response.Redirect("GreskaLokacija.aspx", false);
-                log.Error("Error. IDLokacija is: " + encryptedParameters);
+                log.Error(Session["login-ImeLokacijeZaLog"].ToString() + " - " + "Error. IDLokacija is: " + encryptedParameters);
             }
         }
         catch (Exception ex)
         {
+            if (Session["login-ImeLokacijeZaLog"] == null)
+            {
+                Session["login-ImeLokacijeZaLog"] = string.Empty;
+            }
             Response.Redirect("GreskaLokacija.aspx", false);
-            log.Error("Error. " + ex);
+            log.Error(Session["login-ImeLokacijeZaLog"].ToString() + " - " + "Error. " + ex);
         }
     }
 
@@ -109,7 +114,7 @@ public partial class login : System.Web.UI.Page
                 Utility utility = new Utility();
 
                 utility.loginPredavanja(txtUsername.Text, IDLokacija, out IDLogPredavanja, out IDOsoba, out ImePrezime, out Result);
-                log.Debug("Login Predavanja: " + " Sifra lokacije - " + IDLokacija + " " + ". Username - " + txtUsername.Text + " " + ". IDLogPredavanja - " + IDLogPredavanja + " " + ". idOsoba - " + IDOsoba + " " + ". Ime - " + ImePrezime + " " + ". Rezultat - " + Result);
+                log.Info(Session["login-ImeLokacijeZaLog"].ToString() + " - " + "Login Predavanja: " + " Sifra lokacije - " + IDLokacija + " " + ". Username - " + txtUsername.Text + " " + ". IDLogPredavanja - " + IDLogPredavanja + " " + ". idOsoba - " + IDOsoba + " " + ". Ime - " + ImePrezime + " " + ". Rezultat - " + Result);
 
                 if (Result != 0)
                 {
@@ -126,15 +131,15 @@ public partial class login : System.Web.UI.Page
                     try
                     {
                         string idTerminPredavanjaIzmena1 = @"IDTerminPredavanja=" + idTerminPredavanjaIzmena;
-                        log.Debug("idTerminPredavanjaIzmena is - " + idTerminPredavanjaIzmena1);
+                        log.Info(Session["login-ImeLokacijeZaLog"].ToString() + " - " + "idTerminPredavanjaIzmena is - " + idTerminPredavanjaIzmena1);
                         string editParameters = AuthenticatedEncryption.AuthenticatedEncryption.Encrypt(idTerminPredavanjaIzmena1, Constants.CryptKey, Constants.AuthKey);
                         editParameters = editParameters.Replace("+", "%252b");
-                        log.Debug("Page to redirect. editParameters is - " + editParameters);
+                        log.Info(Session["login-ImeLokacijeZaLog"].ToString() + " - " + "Page to redirect. editParameters is - " + editParameters);
                         Response.Redirect(string.Format("~/" + PageToRedirect + "?d={0}", editParameters), false);
                     }
                     catch (Exception ex)
                     {
-                        log.Debug("Error while opening the Page: " + PageToRedirect + " . Error message: " + ex.Message);
+                        log.Info(Session["login-ImeLokacijeZaLog"].ToString() + " - " + "Error while opening the Page: " + PageToRedirect + " . Error message: " + ex.Message);
                         throw new Exception("Error while opening the Page: " + PageToRedirect + " . Error message: " + ex.Message);
                     }
                 }
@@ -146,7 +151,7 @@ public partial class login : System.Web.UI.Page
         }
         catch (Exception ex)
         {
-            log.Error("Error while trying to LOGIN. " + ex.Message);
+            log.Error(Session["login-ImeLokacijeZaLog"].ToString() + " - " + "Error while trying to LOGIN. " + ex.Message);
             ScriptManager.RegisterStartupScript(this, GetType(), "erroralert", "erroralert();", true);
         }
     }
