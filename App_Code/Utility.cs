@@ -457,8 +457,8 @@ WHERE        (dbo.TerminPredavanja.IDOsobaPredavac = @idosoba) AND (dbo.TerminPr
                 }
                 catch (Exception ex)
                 {
-                    log.Error("Error while getting itemTextEnglish. " + ex.Message);
-                    throw new Exception("Error while getting itemTextEnglish. " + ex.Message);
+                    log.Error("Error while getting tipPredavanja. " + ex.Message);
+                    throw new Exception("Error while getting tipPredavanja. " + ex.Message);
                 }
             }
         }
@@ -530,8 +530,8 @@ WHERE        (IDLokacija = @idlokacije)";
                 }
                 catch (Exception ex)
                 {
-                    log.Error("Error while getting itemTextEnglish. " + ex.Message);
-                    throw new Exception("Error while getting itemTextEnglish. " + ex.Message);
+                    log.Error("Error while getting ImeLokacije. " + ex.Message);
+                    throw new Exception("Error while getting ImeLokacije. " + ex.Message);
                 }
             }
         }

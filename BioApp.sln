@@ -1,26 +1,26 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.28307.645
+VisualStudioVersion = 15.0.28307.852
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "BioApp(2)", "..\BioApp", "{9F50E0BB-90DF-49B5-9A4E-8D337671BB78}"
+Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "BioApp(1)", ".", "{3E32BE06-107F-40D4-B788-620A63C298E6}"
 	ProjectSection(WebsiteProperties) = preProject
-		TargetFrameworkMoniker = ".NETFramework,Version%3Dv4.7.1"
-		Debug.AspNetCompiler.VirtualPath = "/localhost_61866"
+		TargetFrameworkMoniker = ".NETFramework,Version%3Dv4.0"
+		Debug.AspNetCompiler.VirtualPath = "/localhost_55821"
 		Debug.AspNetCompiler.PhysicalPath = "..\..\..\..\..\GitHub\BioApp\"
-		Debug.AspNetCompiler.TargetPath = "PrecompiledWeb\localhost_61866\"
+		Debug.AspNetCompiler.TargetPath = "PrecompiledWeb\localhost_55821\"
 		Debug.AspNetCompiler.Updateable = "true"
 		Debug.AspNetCompiler.ForceOverwrite = "true"
 		Debug.AspNetCompiler.FixedNames = "false"
 		Debug.AspNetCompiler.Debug = "True"
-		Release.AspNetCompiler.VirtualPath = "/localhost_61866"
+		Release.AspNetCompiler.VirtualPath = "/localhost_55821"
 		Release.AspNetCompiler.PhysicalPath = "..\..\..\..\..\GitHub\BioApp\"
-		Release.AspNetCompiler.TargetPath = "PrecompiledWeb\localhost_61866\"
+		Release.AspNetCompiler.TargetPath = "PrecompiledWeb\localhost_55821\"
 		Release.AspNetCompiler.Updateable = "true"
 		Release.AspNetCompiler.ForceOverwrite = "true"
 		Release.AspNetCompiler.FixedNames = "false"
 		Release.AspNetCompiler.Debug = "False"
-		VWDPort = "61866"
+		VWDPort = "55821"
 	EndProjectSection
 EndProject
 Global
@@ -28,13 +28,13 @@ Global
 		Debug|Any CPU = Debug|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{9F50E0BB-90DF-49B5-9A4E-8D337671BB78}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{9F50E0BB-90DF-49B5-9A4E-8D337671BB78}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3E32BE06-107F-40D4-B788-620A63C298E6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3E32BE06-107F-40D4-B788-620A63C298E6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {D476802B-CC7F-4CB3-AA52-71B35A5E14F4}
+		SolutionGuid = {2DAD3D5C-868D-429E-BC10-764BCE33C9C5}
 	EndGlobalSection
 EndGlobal

@@ -127,7 +127,8 @@
                                                 <div class="col-8">
                                                     <div class="row">
                                                         <div class="col-12 col-sm-6">
-                                                            <asp:TextBox ID="txtIndexNumber" runat="server" CssClass="submit-textbox" maxlength="20" placeholder="upiši broj indeksa" TabIndex="1"></asp:TextBox>
+                                                            <asp:TextBox ID="txtIndexNumber" runat="server" CssClass="submit-textbox" maxlength="20" placeholder="Upišite ID" TabIndex="1"></asp:TextBox>
+                                                            <br><p class="notification" style="margin-bottom: 1px;"><asp:Label id="lblnotification" runat="server" style="font-size:11px; font-weight: bold">Broj indeksa ili korisničko ime profesora.</asp:Label></p>
                                                         </div>
                                                         <div class="col-12 col-sm-6">
                                                             <asp:Button ID="btnAddIndex" runat="server" Text="+ Dodaj prisustvo" CssClass="btn btn-secondary px-3" OnClick="btnAddIndex_Click" OnClientClick="unhook()" TabIndex="2"/>
@@ -182,7 +183,7 @@
                                                             </ItemTemplate>
                                                             <ItemStyle HorizontalAlign="Center" />
                                                         </asp:TemplateField>
-                                                        <asp:BoundField DataField="BrojIndeksa" HeaderText="Broj indeksa" SortExpression="BrojIndeksa"/>
+                                                        <asp:BoundField DataField="BrojIndeksa" HeaderText="ID" SortExpression="BrojIndeksa"/>
                                                         <asp:BoundField DataField="TipStatusa" HeaderText="Tip statusa" SortExpression="TipStatusa"/>
                                                         <asp:BoundField DataField="Boja" HeaderText="Boja" SortExpression="Boja" Visible="false"/>
                                                         <asp:BoundField DataField="IDOsoba" HeaderText="IDOsoba" SortExpression="IDOsoba" Visible="false"/>

@@ -281,7 +281,7 @@
                         <Paragraph>
                           <TextRuns>
                             <TextRun>
-                              <Value>Broj indeksa</Value>
+                              <Value>ID</Value>
                               <Style>
                                 <FontWeight>Bold</FontWeight>
                               </Style>
