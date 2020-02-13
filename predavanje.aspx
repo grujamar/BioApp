@@ -157,7 +157,7 @@
                                     <ContentTemplate>
                                         <fieldset>
                                             <div class="gridview-left-side">
-                                                <asp:Timer ID="Timer2" runat="server" Interval="1000" ontick="Timer2_Tick"></asp:Timer>
+                                                <asp:Timer ID="Timer2" runat="server" Interval="5000" ontick="Timer2_Tick"></asp:Timer>
                                                 <asp:GridView ID="GridView1" runat="server" AutoGenerateColumns="False" AllowPaging="false" AllowSorting="True" ShowHeaderWhenEmpty="True" Width="100%" DataKeyNames="IDDnevniStatusOsobeNaLokaciji,IDOsoba" DataSourceID="dsGridViewEP" OnRowDataBound="GridView1_RowDataBound" Height="100%" PageSize="100" OnRowCommand="GridView1_RowCommand">
                                                     <Columns>
                                                         <asp:BoundField DataField="PoslednjaPromena" HeaderText="Poslednja promena" SortExpression="PoslednjaPromena"/>
